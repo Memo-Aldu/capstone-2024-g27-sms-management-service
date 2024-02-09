@@ -1,4 +1,4 @@
-package crm.sms.model;
+package com.crm.sms.model;
 
 public class SMSEntity {
 }

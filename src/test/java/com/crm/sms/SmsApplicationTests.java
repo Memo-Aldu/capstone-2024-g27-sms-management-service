@@ -1,4 +1,4 @@
-package crm.sms;
+package com.crm.sms;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
