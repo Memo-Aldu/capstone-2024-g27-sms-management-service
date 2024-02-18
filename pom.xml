@@ -126,5 +126,6 @@
                 </configuration>
             </plugin>
 		</plugins>
+		<finalName>sms-management-service</finalName>
 	</build>
 </project>
