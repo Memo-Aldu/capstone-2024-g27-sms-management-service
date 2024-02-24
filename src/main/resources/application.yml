@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: sms-management-service
+    cloud:
+      loadbalancer:
+        ribbon:
+          enabled: false
+twilio:
+  accountSid: YOUR_ACCOUNT_SID
+  authToken: YOUR_AUTH_TOKEN
+  trialNumber: YOUR_TRIAL_NUMBER
+
+
