@@ -11,11 +11,16 @@ import lombok.ToString;
 @AllArgsConstructor @ToString
 public enum MessageStatus {
     QUEUED("queued"),
+    ACCEPTED("accepted"),
+    SCHEDULED("scheduled"),
+    CANCELLED("cancelled"),
+    SENDING("sending"),
     SENT("sent"),
     DELIVERED("delivered"),
     FAILED("failed"),
-    UNDELIVERED("undelivered"),
-    RECEIVED("received");
+    CANCELED("canceled"),
+    UNDELIVERED("undelivered");
+
 
     private final String status;
 
