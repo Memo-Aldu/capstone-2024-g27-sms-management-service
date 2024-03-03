@@ -19,9 +19,19 @@ public enum MessageStatus {
     DELIVERED("delivered"),
     FAILED("failed"),
     CANCELED("canceled"),
-    UNDELIVERED("undelivered");
+    UNDELIVERED("undelivered"),
+    UNKNOWN("unknown");
 
 
     private final String status;
+
+    public static MessageStatus fromString(String status) {
+        for (MessageStatus messageStatus : MessageStatus.values()) {
+            if (messageStatus.status.equalsIgnoreCase(status)) {
+                return messageStatus;
+            }
+        }
+        return UNKNOWN;
+    }
 
 }
