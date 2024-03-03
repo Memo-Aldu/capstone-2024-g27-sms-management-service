@@ -11,12 +11,27 @@ import lombok.ToString;
 @AllArgsConstructor @ToString
 public enum MessageStatus {
     QUEUED("queued"),
+    ACCEPTED("accepted"),
+    SCHEDULED("scheduled"),
+    CANCELLED("cancelled"),
+    SENDING("sending"),
     SENT("sent"),
     DELIVERED("delivered"),
     FAILED("failed"),
+    CANCELED("canceled"),
     UNDELIVERED("undelivered"),
-    RECEIVED("received");
+    UNKNOWN("unknown");
+
 
     private final String status;
+
+    public static MessageStatus fromString(String status) {
+        for (MessageStatus messageStatus : MessageStatus.values()) {
+            if (messageStatus.status.equalsIgnoreCase(status)) {
+                return messageStatus;
+            }
+        }
+        return UNKNOWN;
+    }
 
 }
