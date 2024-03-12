@@ -21,11 +21,10 @@ public record SMSBulkSendRequestDto(
 
         @NotNull(message = "Message content cannot be null")
         @NotBlank(message = "Message content cannot be blank")
-        @JsonProperty("messageContent") String messageContent,
+        @JsonProperty("content") String messageContent,
 
+        @JsonProperty("recipients")
         @NotNull.List({@NotNull(message = "Recipient cannot be null")})
-        @ValidPhoneNumber.List({@ValidPhoneNumber(message = "Recipient is not a valid phone number")})
-        @JsonProperty("recipients") List<String> recipients
-
+        List<@ValidPhoneNumber(message = "Recipient is not a valid phone number") String> recipients
 
 ) {}

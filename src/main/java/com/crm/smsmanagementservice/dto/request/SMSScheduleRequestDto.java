@@ -1,13 +1,12 @@
 package com.crm.smsmanagementservice.dto.request;
 
 import com.crm.smsmanagementservice.util.ValidPhoneNumber;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author : memo-aldu
@@ -26,11 +25,10 @@ public record SMSScheduleRequestDto(
 
         @NotNull(message = "Message content cannot be null")
         @NotBlank(message = "Message content cannot be blank")
-        @JsonProperty("messageContent") String messageContent,
+        @JsonProperty("content") String messageContent,
 
         @NotNull(message = "Date time cannot be null")
-        @NotBlank(message = "Date time cannot be blank")
         @Future(message = "Date time cannot be in the past")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        @JsonProperty("scheduleTime") LocalDateTime scheduleTime
+        //TODO: Validate date between interval?
+        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
 ) {}
