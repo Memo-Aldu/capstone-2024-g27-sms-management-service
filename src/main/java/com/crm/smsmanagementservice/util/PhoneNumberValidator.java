@@ -18,6 +18,10 @@ import org.springframework.context.annotation.Configuration;
 public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
+        if (value == null) {
+            return false;
+        }
+
         value = value.replaceAll("[\\s()-]", "");
 
         if(value.isBlank()) {
