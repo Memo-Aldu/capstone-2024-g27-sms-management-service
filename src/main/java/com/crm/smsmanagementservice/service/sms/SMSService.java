@@ -179,9 +179,9 @@ public class SMSService implements ISMSService {
         }
     }
 
-    @Async
-    @Scheduled(fixedDelay = 10000, timeUnit = TimeUnit.MILLISECONDS)
     @Override
+    @Async("threadPoolTaskExecutor")
+    @Scheduled(fixedDelay = 10000, timeUnit = TimeUnit.MILLISECONDS, initialDelay = 10000)
     public void pollSMSStatus() {
         if (twilioConfig.isPollForStatus()) {
             log.info("Polling SMS status");
