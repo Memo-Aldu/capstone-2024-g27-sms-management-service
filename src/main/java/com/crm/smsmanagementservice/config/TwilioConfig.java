@@ -29,7 +29,7 @@ public class TwilioConfig {
     private String schedulingServiceSid;
     @Value("${twilio.service.bulkSMSSid}")
     private String bulkServiceSid;
-    private String pollForStatus;
+    private boolean pollForStatus;
 
     @PostConstruct
     private void init() {
