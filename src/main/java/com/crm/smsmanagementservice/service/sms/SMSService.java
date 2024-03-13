@@ -29,6 +29,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author : memo-aldu
@@ -45,6 +46,8 @@ public class SMSService implements ISMSService {
     private final DtoDocumentMapper dtoDocumentMapper;
     private final TwilioConfig twilioConfig;
     private final CallbackProperties callbackProperties;
+    private static final List<MessageStatus> NON_TERMINAL_STATUSES = List.of
+            (MessageStatus.QUEUED, MessageStatus.SENT, MessageStatus.ACCEPTED, MessageStatus.SCHEDULED);
     @Override
     public SMSSendResponseDto sendSMS(SMSSendRequestDto request) {
         try {
@@ -176,8 +179,34 @@ public class SMSService implements ISMSService {
         }
     }
 
-
+    @Async
+    @Scheduled(fixedDelay = 10000, timeUnit = TimeUnit.MILLISECONDS)
     @Override
     public void pollSMSStatus() {
+        if (twilioConfig.isPollForStatus()) {
+            log.info("Polling SMS status");
+            List<SmSDocument> nonTerminalMessages = smsRepository.findAllByStatus(NON_TERMINAL_STATUSES);
+            log.info("Found {} Non-terminal messages: {}", nonTerminalMessages.size(), nonTerminalMessages);
+            for (SmSDocument document : nonTerminalMessages) {
+                try {
+                    Message message = Message.fetcher(document.getId()).fetch();
+                    MessageStatus status = MessageStatus.fromString(message.getStatus().toString());
+                    if (status == document.getStatus()) {
+                        continue;
+                    }
+                    else if (status != MessageStatus.DELIVERED) {
+                        document.setDeliveredTime(ZonedDateTime.of(LocalDateTime.now(), ZoneId.systemDefault()));
+                    }
+                    else if (status == MessageStatus.FAILED || status == MessageStatus.UNDELIVERED) {
+                        document.setErrorCode(message.getErrorCode().toString());
+                        document.setErrorMessage(message.getErrorMessage());
+                    }
+                    document.setStatus(status);
+                    smsRepository.save(document);
+                } catch (Exception e) {
+                    log.error("Failed to poll SMS status: {}", e.getMessage());
+                }
+            }
+        }
     }
 }
