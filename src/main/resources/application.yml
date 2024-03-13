@@ -15,5 +15,14 @@ twilio:
   accountSid: YOUR_ACCOUNT_SID
   authToken: YOUR_AUTH_TOKEN
   trialNumber: YOUR_TRIAL_NUMBER
+  pollForStatus: true
+  service:
+    schedulingSMSSid: YOUR_SCHEDULING_SERVICE_SID
+    bulkSMSSid: YOUR_BULK_SERVICE_SID
 
-
+app:
+  callback:
+    url: YOUR_HOST/api/v1/callback
+    endpoints:
+      smsStatus: /sms-status
+      health: /health

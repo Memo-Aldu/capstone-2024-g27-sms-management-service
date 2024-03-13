@@ -10,7 +10,7 @@ import java.lang.annotation.*;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = PhoneNumberValidator.class)
 public @interface ValidPhoneNumber {

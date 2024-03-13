@@ -1,12 +1,11 @@
 package com.crm.smsmanagementservice.dto.response;
 
 import com.crm.smsmanagementservice.enums.MessageStatus;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 /**
  * @author : memo-aldu
@@ -24,6 +23,5 @@ public record SMSScheduleResponseDto(
 
         @NotNull(message = "Date time cannot be null")
         @NotBlank(message = "Date time cannot be blank")
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-        @JsonProperty("scheduleTime") LocalDateTime scheduleTime
+        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
 ) {}
