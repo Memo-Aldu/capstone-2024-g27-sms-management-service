@@ -1,0 +1,47 @@
+version: "3.9"
+networks:
+  main-network:
+    external: false
+    name: ${NETWORK_NAME}
+services:
+  sms-management-service:
+    depends_on:
+      - mongodb
+    image: sms-management-service:v1
+    hostname: ${CONTAINER_HOST}
+    container_name: sms-management-service
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - CONTAINER_PORT=${CONTAINER_PORT}
+    env_file:
+      - ${ENV_FILE}
+    ports:
+      - ${HOST_PORT}:${CONTAINER_PORT}
+    networks:
+      - main-network
+    links:
+      - mongodb
+
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    hostname: ${MONGO_HOSTNAME}
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+      MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
+      MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
+    ports:
+      - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
+    volumes:
+      - ${MONGO_DATA_HOST_PATH}:/data/db
+      - ${MONGO_LOG_HOST_PATH}:/var/log/mongodb
+      - ${MONGO_INITDB_SCRIPTS_HOST_PATH}:/docker-entrypoint-initdb.d
+    networks:
+     - main-network
+
+

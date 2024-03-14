@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  port: ${CONTAINER_PORT:8080}
+  address: ${CONTAINER_HOST:localhost}
 
 spring:
   application:
@@ -8,21 +9,24 @@ spring:
       loadbalancer:
         ribbon:
           enabled: false
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
   data:
     mongodb:
-      uri: CONNECTION_STRING
+      uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_CONTAINER_PORT}/${MONGO_INITDB_DATABASE}?authSource=admin
+
 twilio:
-  accountSid: YOUR_ACCOUNT_SID
-  authToken: YOUR_AUTH_TOKEN
-  trialNumber: YOUR_TRIAL_NUMBER
-  pollForStatus: true
+  accountSid: ${ACCOUNT_SID}
+  authToken: ${AUTH_TOKEN}
+  trialNumber: ${TRIAL_NUMBER}
+  pollForStatus: ${POLL_FOR_STATUS:true}
   service:
-    schedulingSMSSid: YOUR_SCHEDULING_SERVICE_SID
-    bulkSMSSid: YOUR_BULK_SERVICE_SID
+    schedulingSMSSid: ${SCHEDULING_SMS_SID}
+    bulkSMSSid: ${BULK_SMS_SID}
 
 app:
   callback:
-    url: YOUR_HOST/api/v1/callback
+    url: https://ec46-216-209-46-31.ngrok-free.app/api/v1/callback
     endpoints:
       smsStatus: /sms-status
       health: /health
