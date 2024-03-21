@@ -18,6 +18,7 @@
 		<org.mapstruct.version>1.5.5.Final</org.mapstruct.version>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
+        <mongo.java.server.version>1.44.0</mongo.java.server.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,9 +69,35 @@
             <artifactId>mapstruct</artifactId>
             <version>${org.mapstruct.version}</version>
         </dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>3.11.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.powermock</groupId>
+            <artifactId>powermock-module-junit4</artifactId>
+            <version>2.0.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+            <version>3.2.4</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 	<build>
 		<plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.1.2</version>
+                <configuration>
+                    <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                </configuration>
+            </plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
@@ -136,10 +163,11 @@
                 <configuration>
                     <excludes>
                         <exclude>**/SmsManagementServiceApplication*</exclude>
-                        <exclude>**/model/*</exclude>
-                        <exclude>**/dto/*</exclude>
-						<exclude>**/enums/*</exclude>
-						<exclude>**/config/*</exclude>
+                        <exclude>**/entity/**</exclude>
+						<exclude>**/config/**</exclude>
+                        <exclude>**/exception/Error.*</exclude>
+                         <exclude>**/twilio/**</exclude>
+                        <exclude>**/exception/ErrorResponse.*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
