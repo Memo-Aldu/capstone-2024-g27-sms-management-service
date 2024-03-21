@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Configuration;
  * @created : 2/18/2024, Sunday
 **/
 
-@Getter
+@Getter @Setter
 @Configuration
 @Slf4j(topic = "TwilioConfig")
 @ConfigurationProperties(prefix = "twilio")
@@ -33,7 +33,6 @@ public class TwilioConfig {
     private String schedulingServiceSid;
     @Value("${twilio.service.bulkSMSSid}")
     private String bulkServiceSid;
-    @Setter
     private boolean pollForStatus;
 
     @PostConstruct

@@ -30,8 +30,8 @@ jobs:
     - name: Build with Maven
       run: mvn clean install
       env:
-        TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
-        TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+        TEST_ACCOUNT_SID: ${{ secrets.TEST_ACCOUNT_SID }}
+        TEST_ACCOUNT_TOKEN: ${{ secrets.TEST_ACCOUNT_TOKEN }}
 
       # Docker build and push
     - name: Build and push Docker image
