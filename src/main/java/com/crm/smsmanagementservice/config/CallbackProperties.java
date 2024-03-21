@@ -1,5 +1,7 @@
 package com.crm.smsmanagementservice.config;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,6 +18,8 @@ public class CallbackProperties {
     private String smsStatusEndpoint;
     @Value("${app.callback.endpoints.health}")
     private String healthEndpoint;
+    @Setter @Getter
+    private Boolean isHealthy;
 
     public String getSmsStatusEndpoint() {
         return url + smsStatusEndpoint;
@@ -24,4 +28,5 @@ public class CallbackProperties {
     public String getHealthEndpoint() {
         return url + healthEndpoint;
     }
+
 }

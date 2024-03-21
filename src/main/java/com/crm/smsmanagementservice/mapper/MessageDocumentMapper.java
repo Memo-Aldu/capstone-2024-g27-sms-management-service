@@ -1,52 +1,41 @@
 package com.crm.smsmanagementservice.mapper;
 
 import com.crm.smsmanagementservice.entity.SmSDocument;
-import com.crm.smsmanagementservice.enums.MessageStatus;
-import com.twilio.type.PhoneNumber;
+import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
-import com.twilio.rest.api.v2010.account.Message;
-
-import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday
  */
-@Component @Mapper(componentModel = "spring")
+@Component("documentMapper") @Mapper(componentModel = "spring")
 public interface MessageDocumentMapper {
-    @Mapping(target = "id", source = "sid")
-    @Mapping(target = "sender", source = "from", qualifiedByName = "mapNumber")
-    @Mapping(target = "recipient", source = "to")
-    @Mapping(target = "messageContent", source = "body")
-    @Mapping(target = "createdTime", source = "dateCreated")
-    @Mapping(target = "deliveredTime", source = "dateSent")
-    @Mapping(target ="scheduledTime", ignore = true)
-    @Mapping(target = "status", source = "status", qualifiedByName = "mapStatus")
-    @Mapping(target = "providerId", source = "sid")
-    @Mapping(target = "errorCode", source = "errorCode")
-    @Mapping(target = "errorMessage", source = "errorMessage")
-    @Mapping(target = "segmentCount", source = "numSegments")
-    @Mapping(target = "mediaCount", source = "numMedia")
-    @Mapping(target = "mediaUrls", source = "subresourceUris", qualifiedByName = "mapMediaUrls")
-    SmSDocument toDocument(Message message);
+/*
+    MessageDocumentMapper INSTANCE = Mappers.getMapper(MessageDocumentMapper.class);
+*/
 
-    @Named("mapNumber")
-     default String mapNumber(PhoneNumber value) {
-        return value.getEndpoint();
+    @Mapping(target = "serviceSid", source = "serviceSid", qualifiedByName = "mapOptional")
+    @Mapping(target = "errorCode", source = "errorCode", qualifiedByName = "mapOptional")
+    @Mapping(target = "errorMessage", source = "errorMessage", qualifiedByName = "mapOptional")
+    @Mapping(target = "segmentCount", source = "segmentCount", qualifiedByName = "mapOptional")
+    @Mapping(target = "mediaCount", source = "mediaCount", qualifiedByName = "mapOptional")
+    @Mapping(target = "mediaUrls", source = "mediaUrls", qualifiedByName = "mapOptionalMap")
+    @Mapping(target = "sender", source = "sender", qualifiedByName = "mapOptional")
+    SmSDocument toDocument(IMessageWrapper message);
+
+    @Named("mapOptional")
+    default String mapOptional(Optional<String> value) {
+        return value.orElse(null);
     }
 
-    @Named("mapStatus")
-    default MessageStatus mapStatus(Message.Status status) {
-        return MessageStatus.valueOf(status.name());
-    }
-
-    @Named("mapMediaUrls")
-    default List<String> mapMediaUrls(Map<String, String> subresourceUris) {
-        return subresourceUris.values().stream().toList();
+    @Named("mapOptionalMap")
+    default Map<String, String> mapOptionalMap(Optional<Map<String, String>> value) {
+        return value.orElse(null);
     }
 }

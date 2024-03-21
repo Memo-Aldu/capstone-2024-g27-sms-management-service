@@ -1,5 +1,6 @@
-package com.crm.smsmanagementservice.dto.request;
+package com.crm.smsmanagementservice.twilio.dto;
 
+import com.crm.smsmanagementservice.dto.request.IMessageStatusCallback;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

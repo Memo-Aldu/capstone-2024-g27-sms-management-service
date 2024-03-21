@@ -1,7 +1,6 @@
 package com.crm.smsmanagementservice.service;
 
 import com.crm.smsmanagementservice.config.CallbackProperties;
-import com.crm.smsmanagementservice.config.TwilioConfig;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -21,7 +20,6 @@ import org.springframework.web.client.RestTemplate;
 public class HealthCheckService implements IHealthCheckService {
   private final RestTemplate restTemplate;
   private final CallbackProperties callbackProperties;
-  private final TwilioConfig twilioConfig;
 
   @Override
   @EventListener(ApplicationReadyEvent.class)
@@ -43,12 +41,12 @@ public class HealthCheckService implements IHealthCheckService {
   }
 
   private void setupCallback() {
-    twilioConfig.setPollForStatus(false);
+    callbackProperties.setIsHealthy(true);
     log.info("Setting up callback");
   }
 
   private void revertToPolling() {
     log.info("Reverting to polling");
-    twilioConfig.setPollForStatus(true);
+    callbackProperties.setIsHealthy(false);
   }
 }

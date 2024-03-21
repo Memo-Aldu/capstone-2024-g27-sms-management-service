@@ -1,12 +1,12 @@
-package com.crm.smsmanagementservice.util;
+package com.crm.smsmanagementservice.twilio.util.validator;
 
 
+import com.crm.smsmanagementservice.util.validator.IPhoneNumberValidator;
 import com.twilio.exception.ApiException;
 import com.twilio.rest.lookups.v2.PhoneNumber;
-import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 /**
  * @author : memo-aldu
@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
  * @created : 2/23/2024, Friday
  */
 
-@Configuration @Slf4j
-public class PhoneNumberValidator implements ConstraintValidator<ValidPhoneNumber, String> {
+@Component @Slf4j
+public class TwilioPhoneNumberValidator implements IPhoneNumberValidator {
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
         if (value == null) {

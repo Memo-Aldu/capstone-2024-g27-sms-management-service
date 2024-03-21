@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.util;
+package com.crm.smsmanagementservice.util.validator;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
@@ -12,7 +12,7 @@ import java.lang.annotation.*;
  */
 @Target({ElementType.FIELD, ElementType.TYPE_USE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = PhoneNumberValidator.class)
+@Constraint(validatedBy = PhoneNumberValidatorProxy.class)
 public @interface ValidPhoneNumber {
     String message() default "Invalid phone number";
     Class<?>[] groups() default {};

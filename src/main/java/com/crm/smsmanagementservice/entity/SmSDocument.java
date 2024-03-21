@@ -9,7 +9,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Map;
 
 /**
  * @author : memo-aldu
@@ -24,6 +24,7 @@ public class SmSDocument {
     private String id;
     private String sender;
     private String recipient;
+    private String serviceSid;
     private String messageContent;
     private ZonedDateTime createdTime;
     private ZonedDateTime deliveredTime;
@@ -34,5 +35,5 @@ public class SmSDocument {
     private String errorMessage;
     private Integer segmentCount;
     private Integer mediaCount;
-    private List<String> mediaUrls;
+    private Map<String, String> mediaUrls;
 }

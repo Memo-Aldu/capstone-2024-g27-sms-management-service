@@ -37,14 +37,14 @@ public class ExceptionHandlerControllerAdvice {
     }
 
     @ExceptionHandler(DomainException.class)
-    public ResponseEntity<ErrorResponse> handleZIOException(DomainException ex, final HttpServletRequest request) {
-        log.warn("Advice ZAIException: {}", ex.getMessage());
+    public ResponseEntity<ErrorResponse> handleDomainException(DomainException ex, final HttpServletRequest request) {
+        log.warn("Advice DomainException: {}", ex.getMessage());
         return ResponseEntity.status(ex.getStatus()).body(
                 new ErrorResponse(ex.getCode(), ex.getMessage(), new HashMap<>(), request.getRequestURI()));
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErrorResponse> handleZIOException(Exception ex, final HttpServletRequest request) {
+    public ResponseEntity<ErrorResponse> handleException(Exception ex, final HttpServletRequest request) {
         log.warn("Advice Exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
                 new ErrorResponse("000" , ex.getMessage(), new HashMap<>() ,request.getRequestURI()));

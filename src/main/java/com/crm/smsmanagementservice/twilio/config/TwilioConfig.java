@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.config;
+package com.crm.smsmanagementservice.twilio.config;
 
 import com.twilio.Twilio;
 import jakarta.annotation.PostConstruct;
@@ -17,18 +17,23 @@ import org.springframework.context.annotation.Configuration;
  * @created : 2/18/2024, Sunday
 **/
 
+@Getter
 @Configuration
-@Getter @Setter @Slf4j(topic = "TwilioConfig")
+@Slf4j(topic = "TwilioConfig")
 @ConfigurationProperties(prefix = "twilio")
 @AllArgsConstructor @NoArgsConstructor
 public class TwilioConfig {
+    @Value("${twilio.accountSid}")
     private String accountSid;
+    @Value("${twilio.authToken}")
     private String authToken;
+    @Value("${twilio.trialNumber}")
     private String trialNumber;
     @Value("${twilio.service.schedulingSMSSid}")
     private String schedulingServiceSid;
     @Value("${twilio.service.bulkSMSSid}")
     private String bulkServiceSid;
+    @Setter
     private boolean pollForStatus;
 
     @PostConstruct
