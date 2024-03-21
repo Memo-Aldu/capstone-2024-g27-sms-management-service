@@ -28,7 +28,10 @@ jobs:
         distribution: 'temurin'
         cache: maven
     - name: Build with Maven
-      run: mvn clean install
+      run: mvn clean test install
+      env:
+        TEST_ACCOUNT_SID: ${{ secrets.TEST_ACCOUNT_SID }}
+        TEST_ACCOUNT_TOKEN: ${{ secrets.TEST_ACCOUNT_TOKEN }}
 
       # Docker build and push
     - name: Build and push Docker image

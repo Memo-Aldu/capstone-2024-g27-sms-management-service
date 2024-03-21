@@ -1,6 +1,6 @@
 package com.crm.smsmanagementservice.controller;
 
-import com.crm.smsmanagementservice.dto.request.TwilioStatusCallbackDto;
+import com.crm.smsmanagementservice.twilio.dto.TwilioStatusCallbackDto;
 import com.crm.smsmanagementservice.service.sms.ISMSService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,14 +28,15 @@ public class CallbackController {
                        @RequestParam(value = "To", required = false) String to,
                        @RequestParam(value = "From", required = false) String from,
                        @RequestParam(value = "MessageSid", required = false) String messageSid,
-                       @RequestParam(value = "AccountSid", required = false) String accountSid) {
-        log.info("SMS status callback received: {}", messageStatus);
+                       @RequestParam(value = "AccountSid", required = false) String accountSid,
+                       @RequestParam(value = "ErrorCode", required = false) String errorCode,
+                       @RequestParam(value = "ErrorMessage", required = false) String errorMessage) {
+        log.info("SMS status callback received: {} " +
+                "with errorCode: {} and error: {}", messageStatus, errorCode, errorMessage);
         smsService.updateSMSStatus(TwilioStatusCallbackDto.builder()
-                .accountSid(accountSid)
-                .messageSid(messageSid)
-                .smsSid(smsSid)
-                .smsStatus(smsStatus)
-                .build());
+                .accountSid(accountSid).messageSid(messageSid)
+                .smsSid(smsSid).smsStatus(smsStatus)
+                .errorCode(errorCode).errorMessage(errorMessage).build());
     }
 
     @GetMapping("/health")

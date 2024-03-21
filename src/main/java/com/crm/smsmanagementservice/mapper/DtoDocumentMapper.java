@@ -5,7 +5,6 @@ import com.crm.smsmanagementservice.dto.response.SMSSendResponseDto;
 import com.crm.smsmanagementservice.entity.SmSDocument;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 
@@ -14,12 +13,13 @@ import org.springframework.stereotype.Component;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday
  */
-@Component @Mapper(componentModel = "spring")
+@Component("dtoDocumentMapper") @Mapper(componentModel = "spring")
 public interface DtoDocumentMapper {
-
+/*
+    DtoDocumentMapper INSTANCE = Mappers.getMapper(DtoDocumentMapper.class);
+*/
     @Mapping(target = "messageId", source = "id")
     @Mapping(target = "status", source = "status")
-    @Named("toSMSSendResponseDto")
     SMSSendResponseDto toSMSSendResponseDto(SmSDocument document);
 
     @Mapping(target = "messageId", source = "id")
