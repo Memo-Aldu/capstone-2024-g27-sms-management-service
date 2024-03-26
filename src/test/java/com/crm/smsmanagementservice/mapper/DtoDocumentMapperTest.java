@@ -1,7 +1,7 @@
 package com.crm.smsmanagementservice.mapper;
 
-import com.crm.smsmanagementservice.dto.response.SMSScheduleResponseDto;
-import com.crm.smsmanagementservice.dto.response.SMSSendResponseDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSScheduleResponseDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSSendResponseDto;
 import com.crm.smsmanagementservice.entity.SmSDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import java.time.ZonedDateTime;

@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.dto.request;
+package com.crm.smsmanagementservice.dto.request.sms;
 
 import com.crm.smsmanagementservice.util.validator.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonProperty;
