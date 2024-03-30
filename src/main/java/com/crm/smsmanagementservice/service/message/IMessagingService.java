@@ -2,6 +2,7 @@ package com.crm.smsmanagementservice.service.message;
 
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 
 /**
@@ -11,9 +12,13 @@ import java.time.ZonedDateTime;
  */
 public interface IMessagingService {
      IMessageWrapper sendSMSFromNumber(String to, String from, String body);
+     IMessageWrapper sendMMSFromNumber(String to, String from, String body, List<String> mediaUrls);
      IMessageWrapper scheduleSMS(String to, String body, ZonedDateTime sendAfter);
+     IMessageWrapper scheduleMMS(String to, String body, List<String> mediaUrls, ZonedDateTime sendAfter);
      IMessageWrapper sendSMSFromNumber(String to, String body);
+     IMessageWrapper sendMMSFromNumber(String to, String body, List<String> mediaUrls);
      IMessageWrapper sendSMSFromService(String to, String body);
+     IMessageWrapper sendMMSFromService(String to, String body, List<String> mediaUrls);
      IMessageWrapper fetchMessageById(String id);
      boolean pollMessageStatus();
 }
