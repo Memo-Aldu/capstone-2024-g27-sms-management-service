@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.dto.response;
+package com.crm.smsmanagementservice.dto.response.sms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;

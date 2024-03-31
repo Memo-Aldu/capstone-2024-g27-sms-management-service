@@ -1,7 +1,13 @@
 package com.crm.smsmanagementservice.controller;
 
-import com.crm.smsmanagementservice.dto.request.*;
-import com.crm.smsmanagementservice.dto.response.*;
+import com.crm.smsmanagementservice.dto.request.sms.SMSBulkScheduleRequestDto;
+import com.crm.smsmanagementservice.dto.request.sms.SMSBulkSendRequestDto;
+import com.crm.smsmanagementservice.dto.request.sms.SMSScheduleRequestDto;
+import com.crm.smsmanagementservice.dto.request.sms.SMSSendRequestDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSBulkScheduleResponseDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSBulkSendResponseDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSScheduleResponseDto;
+import com.crm.smsmanagementservice.dto.response.sms.SMSSendResponseDto;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import com.crm.smsmanagementservice.service.sms.ISMSService;
 import org.junit.jupiter.api.BeforeEach;
