@@ -82,7 +82,10 @@ public class TwilioService implements IMessagingService {
     @Override
     public IMessageWrapper scheduleMMS(String to, String body, List<String> mediaUrls, ZonedDateTime sendAfter) {
         try {
-            List<URI> media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            List<URI> media = new ArrayList<>();
+            if (!mediaUrls.isEmpty()) {
+                media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            }
             Message message = Message.creator(new PhoneNumber(to), twilioConfig.getSchedulingServiceSid(), body)
                     .setSendAt(sendAfter)
                     .setStatusCallback(callbackProperties.getSmsStatusEndpoint())
@@ -114,7 +117,10 @@ public class TwilioService implements IMessagingService {
     @Override
     public IMessageWrapper sendMMSFromNumber(String to, String body, List<String> mediaUrls) {
         try {
-            List<URI> media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            List<URI> media = new ArrayList<>();
+            if (!mediaUrls.isEmpty()) {
+                media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            }
             Message message = Message.creator(new PhoneNumber(to), new PhoneNumber(twilioConfig.getTrialNumber()), body)
                     .setStatusCallback(callbackProperties.getSmsStatusEndpoint())
                     .setMediaUrl(media)
@@ -142,7 +148,10 @@ public class TwilioService implements IMessagingService {
     @Override
     public IMessageWrapper sendMMSFromService(String to, String body, List<String> mediaUrls) {
         try {
-            List<URI> media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            List<URI> media = new ArrayList<>();
+            if (!mediaUrls.isEmpty()) {
+                media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
+            }
             Message message = Message.creator(new PhoneNumber(to), twilioConfig.getBulkServiceSid(), body)
                     .setStatusCallback(callbackProperties.getSmsStatusEndpoint())
                     .setMediaUrl(media)
