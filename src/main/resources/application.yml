@@ -26,7 +26,7 @@ twilio:
 
 app:
   callback:
-    url: https://7568-216-209-46-31.ngrok-free.app/api/v1/callback
+    url: ${CALLBACK_HOST}/api/v1/callback
     endpoints:
       smsStatus: /sms-status
       health: /health
