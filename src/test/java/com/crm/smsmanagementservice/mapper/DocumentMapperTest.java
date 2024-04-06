@@ -18,12 +18,12 @@ import static org.mockito.Mockito.when;
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/18/2024, Monday
  */
+public class DocumentMapperTest {
+  private final DocumentMapper documentMapper = new DocumentMapperImpl();
 
-public class MessageDocumentMapperTest {
-    private final DocumentMapper messageMapper = new DocumentMapperImpl();
   @Test
   public void toDocument_NullMessage_ReturnsNull() {
-    assertNull(mapper.toDocument(null));
+    assertNull(documentMapper.toDocument(null));
   }
 
   @Test
@@ -47,7 +47,7 @@ public class MessageDocumentMapperTest {
     when(message.getProviderId()).thenReturn("providerId");
 
     // When
-    MessageDocument document = mapper.toDocument(message);
+    MessageDocument document = documentMapper.toDocument(message);
 
     // Then
     assertNotNull(document);

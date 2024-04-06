@@ -20,13 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 
 
-public class DtoDocumentMapperTest {
+public class DtoMapperTest {
 
-    private final DtoMapper documentMapper = new DtoMapperImpl();
-    private final DocumentMapper messageMapper = new DocumentMapperImpl();
+    private final DtoMapper dtoMapper = new DtoMapperImpl();
+
     @Test
     void toSMSSendResponseDto_NullDocument_ReturnsNull() {
-        assertNull(documentMapper.toSMSSendResponseDto(null));
+        assertNull(dtoMapper.toSMSSendResponseDto(null));
     }
 
     @Test
@@ -34,7 +34,7 @@ public class DtoDocumentMapperTest {
         // Given
         MessageDocument document = MessageDocument.builder()
                 .id("123").status(MessageStatus.DELIVERED).build();
-        SMSSendResponseDto dto = documentMapper.toSMSSendResponseDto(document);
+        SMSSendResponseDto dto = dtoMapper.toSMSSendResponseDto(document);
         assertNotNull(dto);
         assertEquals("123", dto.messageId());
         assertEquals(MessageStatus.DELIVERED, dto.status());
@@ -42,7 +42,7 @@ public class DtoDocumentMapperTest {
 
     @Test
     void toSMSScheduleResponseDto_NullDocument_ReturnsNull() {
-        assertNull(documentMapper.toSMSScheduleResponseDto(null));
+        assertNull(dtoMapper.toSMSScheduleResponseDto(null));
     }
 
     @Test
@@ -52,7 +52,7 @@ public class DtoDocumentMapperTest {
         MessageDocument document = MessageDocument.builder()
                 .id("456").status(MessageStatus.SCHEDULED).scheduledTime(scheduledTime).build();
 
-        SMSScheduleResponseDto dto = documentMapper.toSMSScheduleResponseDto(document);
+        SMSScheduleResponseDto dto = dtoMapper.toSMSScheduleResponseDto(document);
 
         assertNotNull(dto);
         assertEquals("456", dto.messageId());

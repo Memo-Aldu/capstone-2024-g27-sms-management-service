@@ -14,8 +14,8 @@ import java.util.Optional;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday
  */
-@Component("documentMapper") @Mapper(componentModel = "spring")
-public interface MessageDocumentMapper {
+@Mapper(componentModel = "spring")
+public interface DocumentMapper {
 
     @Mapping(target = "serviceSid", source = "serviceSid", qualifiedByName = "mapOptional")
     @Mapping(target = "errorCode", source = "errorCode", qualifiedByName = "mapOptional")

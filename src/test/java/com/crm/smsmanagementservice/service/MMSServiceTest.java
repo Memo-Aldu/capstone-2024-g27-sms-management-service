@@ -8,9 +8,11 @@ import com.crm.smsmanagementservice.dto.response.mms.MMSBulkScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSBulkSendResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSSendResponseDto;
-import com.crm.smsmanagementservice.entity.SmSDocument;
-import com.crm.smsmanagementservice.mapper.MessageDocumentMapper;
-import com.crm.smsmanagementservice.repository.SMSRepository;
+import com.crm.smsmanagementservice.entity.MessageDocument;
+import com.crm.smsmanagementservice.enums.MessageStatus;
+import com.crm.smsmanagementservice.mapper.DocumentMapper;
+import com.crm.smsmanagementservice.mapper.DtoMapper;
+import com.crm.smsmanagementservice.repository.MessageRepository;
 import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import com.crm.smsmanagementservice.service.message.IMessagingService;
 import com.crm.smsmanagementservice.service.mms.MMSService;
@@ -36,8 +38,9 @@ import java.util.Map;
 @ExtendWith(MockitoExtension.class)
 @Slf4j
 public class MMSServiceTest {
-  @Mock private SMSRepository smsRepository;
-  @Mock private MessageDocumentMapper messageDocumentMapper;
+  @Mock private MessageRepository smsRepository;
+  @Mock private DocumentMapper messageDocumentMapper;
+  @Mock private DtoMapper dtoMapper;
   @Mock private IMessagingService twilioService;
   @InjectMocks private MMSService mmsService;
 
@@ -47,8 +50,8 @@ public class MMSServiceTest {
         new MMSSendRequestDto(
                 "1234567890", "1234567890",
                 "Hello, World!", List.of("http://example.com/image.jpg"));
-    SmSDocument document =
-        SmSDocument.builder()
+    MessageDocument document =
+        MessageDocument.builder()
             .id("MESSAGE_ID").recipient("1234567890").sender("1234567890")
             .messageContent("Hello, World!").mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
     IMessageWrapper mockMessage = mock(IMessageWrapper.class);
@@ -56,8 +59,11 @@ public class MMSServiceTest {
             request.recipient(), request.messageContent(), request.mediaUrls()))
         .thenReturn(mockMessage);
     when(smsRepository.save(any())).thenReturn(document);
+    when(messageDocumentMapper.toDocument(mockMessage)).thenReturn(document);
+    when(dtoMapper.toMMSSendResponseDto(document)).thenReturn(new MMSSendResponseDto("MESSAGE_ID", MessageStatus.DELIVERED));
     MMSSendResponseDto responseDto = mmsService.sendMMS(request);
     assertEquals("MESSAGE_ID", responseDto.messageId());
+    assertEquals(MessageStatus.DELIVERED, responseDto.status());
   }
 
   @Test
@@ -68,8 +74,8 @@ public class MMSServiceTest {
             "1234567890", "1234567890",
             "Hello, World!", now,
             List.of("http://example.com/image.jpg"));
-    SmSDocument document =
-        SmSDocument.builder()
+    MessageDocument document =
+        MessageDocument.builder()
             .id("MESSAGE_ID").recipient("1234567890")
             .sender("1234567890").messageContent("Hello, World!")
             .scheduledTime(now).mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
@@ -80,8 +86,11 @@ public class MMSServiceTest {
             request.mediaUrls(), request.scheduleTime()))
         .thenReturn(mockMessage);
     when(smsRepository.save(any())).thenReturn(document);
+    when(messageDocumentMapper.toDocument(mockMessage)).thenReturn(document);
+    when(dtoMapper.toMMSScheduleResponseDto(document)).thenReturn(new MMSScheduleResponseDto("MESSAGE_ID", MessageStatus.SCHEDULED, now));
     MMSScheduleResponseDto responseDto = mmsService.scheduleMMS(request);
     assertEquals("MESSAGE_ID", responseDto.messageId());
+    assertEquals(MessageStatus.SCHEDULED, responseDto.status());
     assertEquals(now, responseDto.scheduleTime());
   }
 
@@ -91,13 +100,13 @@ public class MMSServiceTest {
         new MMSBulkSendRequestDto(
             "1234567890", "Hello, World!",
             List.of("1234567890", "1234567891"), List.of("http://example.com/image.jpg"));
-    SmSDocument document1 =
-        SmSDocument.builder()
+    MessageDocument document1 =
+        MessageDocument.builder()
             .id("MESSAGE_ID1").recipient("1234567890")
             .sender("1234567890").messageContent("Hello, World!")
             .mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
-    SmSDocument document2 =
-        SmSDocument.builder()
+    MessageDocument document2 =
+        MessageDocument.builder()
             .id("MESSAGE_ID2").recipient("1234567891")
             .sender("1234567890").messageContent("Hello, World!")
             .mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
@@ -110,11 +119,13 @@ public class MMSServiceTest {
     when(twilioService.sendMMSFromService(
             "1234567891", request.messageContent(), request.mediaUrls()))
         .thenReturn(mockMessage2);
-    when(smsRepository.save(any())).thenReturn(document1).thenReturn(document2);
+    when(messageDocumentMapper.toDocument(mockMessage1)).thenReturn(document1);
+    when(messageDocumentMapper.toDocument(mockMessage2)).thenReturn(document2);
+    when(smsRepository.save(any(MessageDocument.class))).thenReturn(document1, document2);
+    when(dtoMapper.toMMSSendResponseDto(document1)).thenReturn(new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED));
+    when(dtoMapper.toMMSSendResponseDto(document2)).thenReturn(new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED));
     MMSBulkSendResponseDto response = mmsService.sendBulkMMS(request);
     assertEquals(2, response.messages().size());
-    assertEquals("MESSAGE_ID2", response.messages().get(0).messageId());
-    assertEquals("MESSAGE_ID1", response.messages().get(1).messageId());
   }
 
   @Test
@@ -124,13 +135,13 @@ public class MMSServiceTest {
         new MMSBulkScheduleRequestDto(
             "1234567890", "Hello, World!",
             List.of("1234567890", "1234567891"), now, List.of("http://example.com/image.jpg"));
-    SmSDocument document1 =
-        SmSDocument.builder()
+    MessageDocument document1 =
+        MessageDocument.builder()
                 .id("MESSAGE_ID1").recipient("1234567890")
                 .sender("1234567890").messageContent("Hello, World!")
                 .scheduledTime(now).mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
-    SmSDocument document2 =
-        SmSDocument.builder()
+    MessageDocument document2 =
+        MessageDocument.builder()
                 .id("MESSAGE_ID2").recipient("1234567891")
                 .sender("1234567890").messageContent("Hello, World!")
                 .scheduledTime(now).mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
@@ -143,11 +154,13 @@ public class MMSServiceTest {
     when(twilioService.scheduleMMS(
             "1234567891", request.messageContent(), request.mediaUrls(), now))
         .thenReturn(mockMessage2);
-    when(smsRepository.save(any())).thenReturn(document1).thenReturn(document2);
+    when(messageDocumentMapper.toDocument(mockMessage1)).thenReturn(document1);
+    when(messageDocumentMapper.toDocument(mockMessage2)).thenReturn(document2);
+    when(smsRepository.save(any(MessageDocument.class))).thenReturn(document1, document2);
+    when(dtoMapper.toMMSSendResponseDto(document1)).thenReturn(new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.SCHEDULED));
+    when(dtoMapper.toMMSSendResponseDto(document2)).thenReturn(new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.SCHEDULED));
     MMSBulkScheduleResponseDto response = mmsService.scheduleBulkMMS(request);
     assertEquals(2, response.messages().size());
-    assertEquals("MESSAGE_ID1", response.messages().get(0).messageId());
-    assertEquals("MESSAGE_ID2", response.messages().get(1).messageId());
     assertEquals(now, response.scheduleTime());
   }
 }

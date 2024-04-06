@@ -10,13 +10,13 @@ import com.crm.smsmanagementservice.dto.response.sms.SMSBulkScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.sms.SMSBulkSendResponseDto;
 import com.crm.smsmanagementservice.dto.response.sms.SMSScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.sms.SMSSendResponseDto;
-import com.crm.smsmanagementservice.entity.SmSDocument;
+import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import com.crm.smsmanagementservice.exception.DomainException;
 import com.crm.smsmanagementservice.exception.Error;
-import com.crm.smsmanagementservice.mapper.DtoDocumentMapper;
-import com.crm.smsmanagementservice.mapper.MessageDocumentMapper;
-import com.crm.smsmanagementservice.repository.SMSRepository;
+import com.crm.smsmanagementservice.mapper.DtoMapper;
+import com.crm.smsmanagementservice.mapper.DocumentMapper;
+import com.crm.smsmanagementservice.repository.MessageRepository;
 import com.crm.smsmanagementservice.service.message.IMessagingService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +40,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 @AllArgsConstructor
-@Slf4j
+@Slf4j(topic = "SMSService")
 public class SMSService implements ISMSService {
-    private final SMSRepository smsRepository;
-    @Qualifier("documentMapper")
-    private final MessageDocumentMapper messageMapper;
-    private final DtoDocumentMapper dtoDocumentMapper;
+    private final MessageRepository smsRepository;
+    private final DocumentMapper messageMapper;
+    private final DtoMapper dtoDocumentMapper;
     private final IMessagingService messageService;
     private static final List<MessageStatus> NON_TERMINAL_STATUSES = List.of
             (MessageStatus.QUEUED, MessageStatus.SENT, MessageStatus.ACCEPTED, MessageStatus.SCHEDULED);
@@ -56,7 +55,7 @@ public class SMSService implements ISMSService {
                     request.recipient(),
                     request.messageContent());
             log.info("SMS sent successfully: {}", message);
-            SmSDocument document = smsRepository.save(messageMapper.toDocument(message));
+            MessageDocument document = smsRepository.save(messageMapper.toDocument(message));
             log.info("SMS saved successfully: {}", document);
             return dtoDocumentMapper.toSMSSendResponseDto(document);
         } catch (DataAccessException e) {
@@ -80,7 +79,7 @@ public class SMSService implements ISMSService {
                     request.messageContent(),
                     request.scheduleTime());
             log.info("SMS scheduled successfully: {}", message);
-            SmSDocument document = smsRepository.save(messageMapper.toDocument(message));
+            MessageDocument document = smsRepository.save(messageMapper.toDocument(message));
             document.setScheduledTime(request.scheduleTime());
             return dtoDocumentMapper.toSMSScheduleResponseDto(document);
         } catch (DataAccessException e) {
@@ -106,7 +105,7 @@ public class SMSService implements ISMSService {
                         recipient,
                         request.messageContent());
                 log.info("SMS sent successfully: {}", message);
-                 SmSDocument document = smsRepository.save(messageMapper.toDocument(message));
+                 MessageDocument document = smsRepository.save(messageMapper.toDocument(message));
                  messages.add(dtoDocumentMapper.toSMSSendResponseDto(document));
             });
             return new SMSBulkSendResponseDto(messages);
@@ -135,7 +134,7 @@ public class SMSService implements ISMSService {
                         request.messageContent(),
                         request.scheduleTime());
                 log.info("SMS scheduled successfully: {}", message);
-                SmSDocument document = messageMapper.toDocument(message);
+                MessageDocument document = messageMapper.toDocument(message);
                 document.setScheduledTime(request.scheduleTime());
                 document = smsRepository.save(document);
                 messages.add(dtoDocumentMapper.toSMSSendResponseDto(document));
@@ -157,7 +156,7 @@ public class SMSService implements ISMSService {
     public void updateSMSStatus(IMessageStatusCallback smsStatus) {
         log.info("Updating SMS status: {}", smsStatus);
         try {
-            SmSDocument document = smsRepository.findById(smsStatus.getMessageId())
+            MessageDocument document = smsRepository.findById(smsStatus.getMessageId())
                     .orElseThrow(() -> new DomainException(Error.ENTITY_NOT_FOUND));
             MessageStatus status = MessageStatus.fromString(smsStatus.getStatus());
             if (status == MessageStatus.DELIVERED) {
@@ -187,9 +186,9 @@ public class SMSService implements ISMSService {
     public void pollSMSStatus() {
         if (messageService.pollMessageStatus()) {
             log.info("Polling SMS status");
-            List<SmSDocument> nonTerminalMessages = smsRepository.findAllByStatus(NON_TERMINAL_STATUSES);
+            List<MessageDocument> nonTerminalMessages = smsRepository.findAllByStatus(NON_TERMINAL_STATUSES);
             log.info("Found {} Non-terminal messages: {}", nonTerminalMessages.size(), nonTerminalMessages);
-            for (SmSDocument document : nonTerminalMessages) {
+            for (MessageDocument document : nonTerminalMessages) {
                 try {
                     IMessageWrapper message = messageService.fetchMessageById(document.getId());
                     MessageStatus status = MessageStatus.fromString(message.getStatus().name());

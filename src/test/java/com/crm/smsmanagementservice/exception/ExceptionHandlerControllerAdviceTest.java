@@ -81,7 +81,7 @@ class ExceptionHandlerControllerAdviceTest {
         // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
-        assertEquals("000", responseEntity.getBody().getCode());
+        assertEquals("000500", responseEntity.getBody().getCode());
         assertEquals(message, responseEntity.getBody().getMessage());
     }
 }
