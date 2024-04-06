@@ -1,6 +1,6 @@
 package com.crm.smsmanagementservice.repository;
 
-import com.crm.smsmanagementservice.entity.SmSDocument;
+import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -15,7 +15,7 @@ import java.util.List;
  * @created : 2/18/2024, Sunday
  */
 @Repository
-public interface SMSRepository extends MongoRepository<SmSDocument, String> {
+public interface MessageRepository extends MongoRepository<MessageDocument, String> {
     @Query("{ 'status' : { $in: ?0 } }")
-    List<SmSDocument> findAllByStatus(List<MessageStatus> statuses);
+    List<MessageDocument> findAllByStatus(List<MessageStatus> statuses);
 }

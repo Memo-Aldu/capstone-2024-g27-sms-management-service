@@ -2,7 +2,7 @@ package com.crm.smsmanagementservice.mapper;
 
 import com.crm.smsmanagementservice.dto.response.sms.SMSScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.sms.SMSSendResponseDto;
-import com.crm.smsmanagementservice.entity.SmSDocument;
+import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import java.time.ZonedDateTime;
 import org.junit.jupiter.api.Test;
@@ -22,8 +22,8 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class DtoDocumentMapperTest {
 
-    private final DtoDocumentMapper documentMapper = new DtoDocumentMapperImpl();
-    private final MessageDocumentMapper messageMapper = new MessageDocumentMapperImpl();
+    private final DtoMapper documentMapper = new DtoMapperImpl();
+    private final DocumentMapper messageMapper = new DocumentMapperImpl();
     @Test
     void toSMSSendResponseDto_NullDocument_ReturnsNull() {
         assertNull(documentMapper.toSMSSendResponseDto(null));
@@ -32,7 +32,7 @@ public class DtoDocumentMapperTest {
     @Test
     void toSMSSendResponseDto_ValidDocument_MapsCorrectly() {
         // Given
-        SmSDocument document = SmSDocument.builder()
+        MessageDocument document = MessageDocument.builder()
                 .id("123").status(MessageStatus.DELIVERED).build();
         SMSSendResponseDto dto = documentMapper.toSMSSendResponseDto(document);
         assertNotNull(dto);
@@ -49,7 +49,7 @@ public class DtoDocumentMapperTest {
     void toSMSScheduleResponseDto_ValidDocument_MapsCorrectly() {
         // Given
         ZonedDateTime scheduledTime = ZonedDateTime.now();
-        SmSDocument document = SmSDocument.builder()
+        MessageDocument document = MessageDocument.builder()
                 .id("456").status(MessageStatus.SCHEDULED).scheduledTime(scheduledTime).build();
 
         SMSScheduleResponseDto dto = documentMapper.toSMSScheduleResponseDto(document);

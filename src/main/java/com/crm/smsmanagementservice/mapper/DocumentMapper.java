@@ -1,6 +1,6 @@
 package com.crm.smsmanagementservice.mapper;
 
-import com.crm.smsmanagementservice.entity.SmSDocument;
+import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -16,9 +16,6 @@ import java.util.Optional;
  */
 @Component("documentMapper") @Mapper(componentModel = "spring")
 public interface MessageDocumentMapper {
-/*
-    MessageDocumentMapper INSTANCE = Mappers.getMapper(MessageDocumentMapper.class);
-*/
 
     @Mapping(target = "serviceSid", source = "serviceSid", qualifiedByName = "mapOptional")
     @Mapping(target = "errorCode", source = "errorCode", qualifiedByName = "mapOptional")
@@ -27,7 +24,7 @@ public interface MessageDocumentMapper {
     @Mapping(target = "mediaCount", source = "mediaCount", qualifiedByName = "mapOptional")
     @Mapping(target = "mediaUrls", source = "mediaUrls", qualifiedByName = "mapOptionalMap")
     @Mapping(target = "sender", source = "sender", qualifiedByName = "mapOptional")
-    SmSDocument toDocument(IMessageWrapper message);
+    MessageDocument toDocument(IMessageWrapper message);
 
     @Named("mapOptional")
     default String mapOptional(Optional<String> value) {

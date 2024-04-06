@@ -1,6 +1,6 @@
 package com.crm.smsmanagementservice.mapper;
 
-import com.crm.smsmanagementservice.entity.SmSDocument;
+import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
 import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.mockito.Mockito.when;
  */
 
 public class MessageDocumentMapperTest {
-  private final MessageDocumentMapper mapper = new MessageDocumentMapperImpl();
+    private final DocumentMapper messageMapper = new DocumentMapperImpl();
   @Test
   public void toDocument_NullMessage_ReturnsNull() {
     assertNull(mapper.toDocument(null));
@@ -47,7 +47,7 @@ public class MessageDocumentMapperTest {
     when(message.getProviderId()).thenReturn("providerId");
 
     // When
-    SmSDocument document = mapper.toDocument(message);
+    MessageDocument document = mapper.toDocument(message);
 
     // Then
     assertNotNull(document);
