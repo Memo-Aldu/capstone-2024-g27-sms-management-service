@@ -30,11 +30,6 @@ import org.mockito.Mock;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/**
- * @author : memo-aldu
- * @mailto : maldu064@uOttawa.ca
- * @created : 3/14/2024, Thursday
- */
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.dao.DataAccessException;
@@ -139,7 +134,7 @@ public class SMSServiceTest {
     SMSSendResponseDto expectedResponseDto = new SMSSendResponseDto("someSid", MessageStatus.SENT);
 
     IMessageWrapper mockMessage = mock(IMessageWrapper.class);
-    when(twilioService.sendSMSFromNumber(requestDto.recipient(), requestDto.messageContent()))
+    when(twilioService.sendSMSFromNumber(requestDto.recipient(), requestDto.sender(), requestDto.messageContent()))
         .thenReturn(mockMessage);
 
     when(messageDocumentMapper.toDocument(any(IMessageWrapper.class))).thenReturn(savedDocument);
@@ -156,7 +151,7 @@ public class SMSServiceTest {
     assertNotNull(actualResponseDto);
     assertEquals(expectedResponseDto, actualResponseDto);
     verify(twilioService, times(1))
-        .sendSMSFromNumber(requestDto.recipient(), requestDto.messageContent());
+        .sendSMSFromNumber(requestDto.recipient(), requestDto.sender(), requestDto.messageContent());
     verify(smsRepository, times(1)).save(savedDocument);
   }
 
@@ -399,7 +394,7 @@ public class SMSServiceTest {
         new SMSSendRequestDto("recipient", "recipient", "messageContent");
 
     // Stub the twilioService.sendSMS call to throw an ApiException
-    when(twilioService.sendSMSFromNumber(anyString(), eq("messageContent")))
+    when(twilioService.sendSMSFromNumber(eq(requestDto.sender()), eq(requestDto.recipient()), eq("messageContent")))
         .thenThrow(new DomainException(Error.INVALID_REQUEST));
 
     // when
@@ -426,7 +421,7 @@ public class SMSServiceTest {
             .recipient("recipient")
             .messageContent("messageContent")
             .build();
-    when(twilioService.sendSMSFromNumber(anyString(), eq("messageContent")))
+    when(twilioService.sendSMSFromNumber(eq(requestDto.recipient()), eq(requestDto.sender()), eq("messageContent")))
         .thenReturn(mock(IMessageWrapper.class));
 
     when(messageDocumentMapper.toDocument(any(IMessageWrapper.class))).thenReturn(document);

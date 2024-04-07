@@ -56,7 +56,7 @@ public class MMSServiceTest {
             .messageContent("Hello, World!").mediaUrls(Map.of("1", "http://example.com/image.jpg")).build();
     IMessageWrapper mockMessage = mock(IMessageWrapper.class);
     when(twilioService.sendMMSFromNumber(
-            request.recipient(), request.messageContent(), request.mediaUrls()))
+            request.recipient(), request.sender(), request.messageContent(), request.mediaUrls()))
         .thenReturn(mockMessage);
     when(smsRepository.save(any())).thenReturn(document);
     when(messageDocumentMapper.toDocument(mockMessage)).thenReturn(document);
