@@ -6,7 +6,7 @@ COPY pom.xml /app
 RUN mvn dependency:resolve
 COPY . /app
 RUN mvn clean
-RUN mvn package -DskipTests -X
+RUN mvn package
 
 FROM openjdk:21-jdk-slim
 COPY --from=build /app/target/sms-management-service.jar sms-management-service.jar
