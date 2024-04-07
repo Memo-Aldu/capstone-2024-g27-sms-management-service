@@ -39,7 +39,8 @@ public class MMSService implements IMMSService {
     @Override
     public MMSSendResponseDto sendMMS(MMSSendRequestDto mmsSendRequest) {
         IMessageWrapper message = messageService.sendMMSFromNumber(
-                mmsSendRequest.recipient(), mmsSendRequest.messageContent(), mmsSendRequest.mediaUrls());
+                mmsSendRequest.recipient(), mmsSendRequest.sender(),
+                mmsSendRequest.messageContent(), mmsSendRequest.mediaUrls());
         log.info("MMS sent with status {}", message.getStatus());
         MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
         return dtoMapper.toMMSSendResponseDto(document);
@@ -49,8 +50,7 @@ public class MMSService implements IMMSService {
     public MMSScheduleResponseDto scheduleMMS(MMSScheduleRequestDto mmsScheduleRequest) {
         IMessageWrapper message = messageService.scheduleMMS(
                 mmsScheduleRequest.recipient(), mmsScheduleRequest.messageContent(),
-                mmsScheduleRequest.mediaUrls(),
-                mmsScheduleRequest.scheduleTime()
+                mmsScheduleRequest.mediaUrls(), mmsScheduleRequest.scheduleTime()
         );
         log.info("MMS scheduled with status {}", message.getStatus());
         MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));

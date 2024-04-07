@@ -52,7 +52,7 @@ public class SMSService implements ISMSService {
     public SMSSendResponseDto sendSMS(SMSSendRequestDto request) {
         try {
             IMessageWrapper message = messageService.sendSMSFromNumber(
-                    request.recipient(),
+                    request.recipient(), request.sender(),
                     request.messageContent());
             log.info("SMS sent successfully: {}", message);
             MessageDocument document = smsRepository.save(messageMapper.toDocument(message));
@@ -66,7 +66,6 @@ public class SMSService implements ISMSService {
                     e.getMessage());
         } catch (Exception e) {
             log.error("Failed to send SMS: {}", e.getMessage());
-            //TODO: CHECK IF TWILIO THREW AN EXCEPTION with diff service sid
             throw e;
         }
     }
@@ -90,7 +89,6 @@ public class SMSService implements ISMSService {
                     e.getMessage());
         } catch (Exception e) {
             log.error("Failed to schedule SMS: {}", e.getMessage());
-            //TODO: CHECK IF TWILIO THREW AN EXCEPTION with diff service sid
             throw e;
         }
     }
@@ -117,7 +115,6 @@ public class SMSService implements ISMSService {
                     e.getMessage());
         } catch (Exception e) {
             log.error("Failed to bulk send SMS: {}", e.getMessage());
-            //TODO: CHECK IF TWILIO THREW AN EXCEPTION with diff service sid
             throw e;
         }
 
