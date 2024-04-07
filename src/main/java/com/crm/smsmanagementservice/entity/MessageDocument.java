@@ -17,8 +17,8 @@ import java.util.Map;
  * @created : 2/18/2024, Sunday
  */
 @Getter @Setter @Builder
-@Document(collection = "sms_messages")
-public class SmSDocument {
+@Document(collection = "message_messages")
+public class MessageDocument {
 
     @Id
     private String id;

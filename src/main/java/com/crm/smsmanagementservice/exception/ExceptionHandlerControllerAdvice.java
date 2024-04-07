@@ -47,6 +47,6 @@ public class ExceptionHandlerControllerAdvice {
     public ResponseEntity<ErrorResponse> handleException(Exception ex, final HttpServletRequest request) {
         log.warn("Advice Exception: {}", ex.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(
-                new ErrorResponse("000" , ex.getMessage(), new HashMap<>() ,request.getRequestURI()));
+                new ErrorResponse("000500" , ex.getMessage(), new HashMap<>() ,request.getRequestURI()));
     }
 }

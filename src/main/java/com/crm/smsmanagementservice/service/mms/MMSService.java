@@ -8,9 +8,10 @@ import com.crm.smsmanagementservice.dto.response.mms.MMSBulkScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSBulkSendResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSScheduleResponseDto;
 import com.crm.smsmanagementservice.dto.response.mms.MMSSendResponseDto;
-import com.crm.smsmanagementservice.entity.SmSDocument;
-import com.crm.smsmanagementservice.mapper.MessageDocumentMapper;
-import com.crm.smsmanagementservice.repository.SMSRepository;
+import com.crm.smsmanagementservice.entity.MessageDocument;
+import com.crm.smsmanagementservice.mapper.DocumentMapper;
+import com.crm.smsmanagementservice.mapper.DtoMapper;
+import com.crm.smsmanagementservice.repository.MessageRepository;
 import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import com.crm.smsmanagementservice.service.message.IMessagingService;
 import lombok.RequiredArgsConstructor;
@@ -29,31 +30,31 @@ import java.util.List;
 @Slf4j(topic = "MMSService")
 @RequiredArgsConstructor@Service
 public class MMSService implements IMMSService {
-    @Qualifier("documentMapper")
-    private final MessageDocumentMapper messageDocumentMapper;
+    private final DtoMapper dtoMapper;
+    private final DocumentMapper messageDocumentMapper;
     private final IMessagingService messageService;
-    private final SMSRepository smsRepository;
+    private final MessageRepository smsRepository;
 
 
     @Override
     public MMSSendResponseDto sendMMS(MMSSendRequestDto mmsSendRequest) {
         IMessageWrapper message = messageService.sendMMSFromNumber(
-                mmsSendRequest.recipient(), mmsSendRequest.messageContent(), mmsSendRequest.mediaUrls());
+                mmsSendRequest.recipient(), mmsSendRequest.sender(),
+                mmsSendRequest.messageContent(), mmsSendRequest.mediaUrls());
         log.info("MMS sent with status {}", message.getStatus());
-        SmSDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
-        return new MMSSendResponseDto(document.getId(), message.getStatus());
+        MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
+        return dtoMapper.toMMSSendResponseDto(document);
     }
 
     @Override
     public MMSScheduleResponseDto scheduleMMS(MMSScheduleRequestDto mmsScheduleRequest) {
         IMessageWrapper message = messageService.scheduleMMS(
                 mmsScheduleRequest.recipient(), mmsScheduleRequest.messageContent(),
-                mmsScheduleRequest.mediaUrls(),
-                mmsScheduleRequest.scheduleTime()
+                mmsScheduleRequest.mediaUrls(), mmsScheduleRequest.scheduleTime()
         );
         log.info("MMS scheduled with status {}", message.getStatus());
-        SmSDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
-        return new MMSScheduleResponseDto(document.getId(), message.getStatus(), mmsScheduleRequest.scheduleTime());
+        MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
+        return dtoMapper.toMMSScheduleResponseDto(document);
     }
 
     @Override
@@ -63,8 +64,8 @@ public class MMSService implements IMMSService {
                     IMessageWrapper message = messageService.sendMMSFromService(
                             recipient, mmsBulkRequest.messageContent(), mmsBulkRequest.mediaUrls());
                     log.info("MMS sent with status {}", message.getStatus());
-                    SmSDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
-                    return new MMSSendResponseDto(document.getId(), message.getStatus());
+                    MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
+                    return dtoMapper.toMMSSendResponseDto(document);
                 })
                 .toList();
         return new MMSBulkSendResponseDto(messages);
@@ -80,8 +81,8 @@ public class MMSService implements IMMSService {
                             mmsBulkScheduleRequest.scheduleTime()
                     );
                     log.info("MMS scheduled with status {}", message.getStatus());
-                    SmSDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
-                    return new MMSSendResponseDto(document.getId(), message.getStatus());
+                    MessageDocument document = smsRepository.save(messageDocumentMapper.toDocument(message));
+                    return dtoMapper.toMMSSendResponseDto(document);
                 })
                 .toList();
         return new MMSBulkScheduleResponseDto(messages, mmsBulkScheduleRequest.scheduleTime());

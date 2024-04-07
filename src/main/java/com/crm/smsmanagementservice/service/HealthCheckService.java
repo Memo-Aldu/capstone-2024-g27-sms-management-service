@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
  * @created : 3/13/2024, Wednesday
  */
 @Service
-@Slf4j
+@Slf4j(topic = "HealthCheckService")
 @AllArgsConstructor
 public class HealthCheckService implements IHealthCheckService {
   private final RestTemplate restTemplate;
