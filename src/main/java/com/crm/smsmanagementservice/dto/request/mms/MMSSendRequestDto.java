@@ -11,6 +11,7 @@ import org.hibernate.validator.constraints.URL;
 import java.util.List;
 
 /**
+ * This class represents a data transfer object for incoming MMS send requests.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/20/2024, Tuesday

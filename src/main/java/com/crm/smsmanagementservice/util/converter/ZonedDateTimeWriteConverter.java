@@ -6,6 +6,8 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 
 /**
+ * This class converts a ZonedDateTime object to a Date object.
+ * It implements the Converter interface.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday

@@ -8,6 +8,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
+ * This class represents a data transfer object for outgoing scheduling bulk MMS responses.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Fridays

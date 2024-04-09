@@ -9,6 +9,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class validates the phone number using Twilio API.
+ * It implements the IPhoneNumberValidator interface.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday
@@ -16,6 +19,14 @@ import org.springframework.stereotype.Component;
 
 @Component @Slf4j
 public class TwilioPhoneNumberValidator implements IPhoneNumberValidator {
+
+    /**
+     * This method validates the phone number using Twilio API.
+     *
+     * @param value The phone number to validate.
+     * @param constraintValidatorContext The constraint validator context.
+     * @return boolean True if the phone number is valid, false otherwise.
+     */
     @Override
     public boolean isValid(String value, ConstraintValidatorContext constraintValidatorContext) {
         if (value == null) {
@@ -29,14 +40,15 @@ public class TwilioPhoneNumberValidator implements IPhoneNumberValidator {
         }
 
         try {
-            // Free Phone Number Validation from Twilio
+            // Use Twilio API to validate the phone number
             PhoneNumber number = PhoneNumber.fetcher(value).fetch();
             return number.getValid();
         } catch (ApiException e) {
+            // If the phone number is invalid, Twilio API will throw a 404 error
             if (e.getStatusCode() == 404) {
                 return false;
             }
-            // TODO: Throw a custom exception
+            log.warn("Error occurred while validating phone number: {}", e.getMessage());
             throw e;
         }
     }

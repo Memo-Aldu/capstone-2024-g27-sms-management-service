@@ -10,6 +10,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 /**
+ * This class represents a data transfer object for incoming scheduling bulk SMS requests.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday

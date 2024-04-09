@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.ToString;
 
 /**
+ * This enum represents the status of a message.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/18/2024, Sunday
@@ -25,6 +27,11 @@ public enum MessageStatus {
 
     private final String status;
 
+    /**
+     * This method returns the MessageStatus enum from a string.
+     * @param status status
+     * @return MessageStatus enum
+     */
     public static MessageStatus fromString(String status) {
         for (MessageStatus messageStatus : MessageStatus.values()) {
             if (messageStatus.status.equalsIgnoreCase(status)) {

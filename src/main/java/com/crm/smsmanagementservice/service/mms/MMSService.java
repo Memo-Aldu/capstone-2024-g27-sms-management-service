@@ -16,12 +16,15 @@ import com.crm.smsmanagementservice.service.message.IMessageWrapper;
 import com.crm.smsmanagementservice.service.message.IMessagingService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
+ * This class is a service that handles operations related to the multimedia messaging service (MMS).
+ * It has four methods: one for sending an MMS, one for scheduling an MMS, one for sending bulk MMS, and one for scheduling bulk MMS.
+ * It uses the IMessagingService to perform these operations and the MessageRepository to save the messages.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/26/2024, Tuesday
@@ -35,7 +38,11 @@ public class MMSService implements IMMSService {
     private final IMessagingService messageService;
     private final MessageRepository smsRepository;
 
-
+    /**
+     * This method is used to send an MMS.
+     * @param mmsSendRequest the request object containing the details of the MMS to be sent
+     * @return an MMSSendResponseDto object containing the ID and status of the sent message
+     */
     @Override
     public MMSSendResponseDto sendMMS(MMSSendRequestDto mmsSendRequest) {
         IMessageWrapper message = messageService.sendMMSFromNumber(
@@ -46,6 +53,11 @@ public class MMSService implements IMMSService {
         return dtoMapper.toMMSSendResponseDto(document);
     }
 
+    /**
+     * This method is used to schedule an MMS.
+     * @param mmsScheduleRequest the request object containing the details of the MMS to be scheduled
+     * @return an MMSScheduleResponseDto object containing the ID and status of the scheduled message
+     */
     @Override
     public MMSScheduleResponseDto scheduleMMS(MMSScheduleRequestDto mmsScheduleRequest) {
         IMessageWrapper message = messageService.scheduleMMS(
@@ -57,6 +69,11 @@ public class MMSService implements IMMSService {
         return dtoMapper.toMMSScheduleResponseDto(document);
     }
 
+    /**
+     * This method is used to send bulk MMS.
+     * @param mmsBulkRequest the request object containing the details of the MMS to be sent to multiple recipients
+     * @return an MMSBulkSendResponseDto object containing the IDs and statuses of the sent messages
+     */
     @Override
     public MMSBulkSendResponseDto sendBulkMMS(MMSBulkSendRequestDto mmsBulkRequest) {
         List<MMSSendResponseDto> messages = mmsBulkRequest.recipients().parallelStream()
@@ -71,6 +88,11 @@ public class MMSService implements IMMSService {
         return new MMSBulkSendResponseDto(messages);
     }
 
+    /**
+     * This method is used to schedule bulk MMS.
+     * @param mmsBulkScheduleRequest the request object containing the details of the MMS to be scheduled for multiple recipients
+     * @return an MMSBulkScheduleResponseDto object containing the IDs and statuses of the scheduled messages
+     */
     @Override
     public MMSBulkScheduleResponseDto scheduleBulkMMS(MMSBulkScheduleRequestDto mmsBulkScheduleRequest) {
         List<MMSSendResponseDto> messages = mmsBulkScheduleRequest.recipients().parallelStream()

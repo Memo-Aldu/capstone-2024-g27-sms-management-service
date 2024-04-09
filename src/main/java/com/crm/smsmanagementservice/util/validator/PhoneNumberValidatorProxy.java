@@ -6,6 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
+ * This class is the proxy for the phone number validator.
+ * It implements the ConstraintValidator interface.
+ * It is used to validate phone numbers.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/19/2024, Tuesday

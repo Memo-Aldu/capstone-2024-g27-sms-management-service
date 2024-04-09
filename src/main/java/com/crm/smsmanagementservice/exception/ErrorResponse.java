@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import java.util.Map;
 
 /**
+ * This class represents an error response.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday

@@ -9,6 +9,8 @@ import lombok.Builder;
 import java.util.Optional;
 
 /**
+ * This class represents the Twilio status callback DTO.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/26/2024, Monday

@@ -10,12 +10,19 @@ import java.util.List;
 
 
 /**
+ * Mongo repository for persisting message documents.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/18/2024, Sunday
  */
 @Repository
 public interface MessageRepository extends MongoRepository<MessageDocument, String> {
+    /**
+     * Find all messages by status.
+     * @param statuses list of statuses
+     * @return list of message documents
+     */
     @Query("{ 'status' : { $in: ?0 } }")
     List<MessageDocument> findAllByStatus(List<MessageStatus> statuses);
 }

@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * This class maps IMessageWrapper to MessageDocument.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday
