@@ -6,6 +6,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
+ * This class represents a data transfer object for outgoing MMS send responses.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday

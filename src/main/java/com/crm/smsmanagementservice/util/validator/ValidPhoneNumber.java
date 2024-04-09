@@ -6,6 +6,8 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 /**
+ * This annotation is used to validate phone numbers.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday

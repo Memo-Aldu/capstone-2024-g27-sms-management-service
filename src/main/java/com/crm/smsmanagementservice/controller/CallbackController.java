@@ -9,7 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 /**
- * @author : memo-aldu
+ * This class is a controller that handles HTTP requests related to callbacks from the Twilio API.
+ * It has two endpoints: one for receiving status updates for SMS messages, and one for checking the health of the service.
+ * It uses the ISMSService to update the status of SMS messages.
+ *  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/26/2024, Monday
  */
@@ -20,6 +23,11 @@ import org.springframework.web.bind.annotation.*;
 public class CallbackController {
     private final ISMSService smsService;
 
+    /**
+     * This method is a callback endpoint for receiving status updates for SMS messages from the Twilio API.
+     * It takes several parameters, including the status of the message, the version of the API, the SID of the SMS, and any error information.
+     * It logs the received information and uses the ISMSService to update the status of the SMS message.
+     */
     @PostMapping(value = "/sms-status")
     public void smsStatusCallback(@RequestParam(value = "MessageStatus", required = false) String messageStatus,
                        @RequestParam(value = "ApiVersion", required = false) String apiVersion,
@@ -39,6 +47,11 @@ public class CallbackController {
                 .errorCode(errorCode).errorMessage(errorMessage).build());
     }
 
+    /**
+     * This method is a callback endpoint for receiving status updates for SMS messages from the Twilio API.
+     * It takes several parameters, including the status of the message, the version of the API, the SID of the SMS, and any error information.
+     * It logs the received information and uses the ISMSService to update the status of the SMS message.
+     */
     @GetMapping("/health")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<?> healthCheck() {

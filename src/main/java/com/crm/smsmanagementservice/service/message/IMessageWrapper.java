@@ -7,6 +7,8 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
+ * This interface defines the structure of a message.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/17/2024, Sunday

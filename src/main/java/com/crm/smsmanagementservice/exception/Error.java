@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 /**
+ * This enum represents the error in the domain.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday

@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 
 /**
+ * This class maps MessageDocument to the appropriate response DTOs.
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/25/2024, Sunday

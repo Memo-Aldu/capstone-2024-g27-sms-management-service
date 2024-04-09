@@ -12,6 +12,9 @@ import java.time.ZonedDateTime;
 import java.util.Map;
 
 /**
+ * This class represents a document of message entity.
+ * It contains all the fields required to store a message in the database.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/18/2024, Sunday

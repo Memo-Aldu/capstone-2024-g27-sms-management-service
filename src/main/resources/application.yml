@@ -18,7 +18,7 @@ spring:
 twilio:
   accountSid: ${ACCOUNT_SID}
   authToken: ${AUTH_TOKEN}
-  trialNumber: ${TRIAL_NUMBER}
+  number: ${TWILIO_NUMBER}
   pollForStatus: ${POLL_FOR_STATUS:true}
   service:
     schedulingSMSSid: ${SCHEDULING_SMS_SID}

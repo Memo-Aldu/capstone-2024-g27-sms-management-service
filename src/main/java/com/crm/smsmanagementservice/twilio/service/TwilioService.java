@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * This class is a service that handles operations related to the Twilio API.
+ * It has methods for sending and scheduling SMS and MMS messages, and for fetching the status of a message.
+ * It uses the TwilioConfig to get the configuration for the Twilio API, and the CallbackProperties to get the configuration for the callback.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/16/2024, Saturday
@@ -31,6 +35,13 @@ public class TwilioService implements IMessagingService {
     private final TwilioConfig twilioConfig;
     private final CallbackProperties callbackProperties;
 
+    /**
+     * This method is used to send an SMS from a specific number.
+     * @param to the recipient's phone number
+     * @param from the sender's phone number
+     * @param body the message body
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendSMSFromNumber(String to, String from, String body) {
         try {
@@ -45,6 +56,14 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to send an MMS from a specific number.
+     * @param to the recipient's phone number
+     * @param from the sender's phone number
+     * @param body the message body
+     * @param mediaUrls a list of URLs of the media to be sent
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendMMSFromNumber(String to, String from, String body, List<String> mediaUrls) {
         try {
@@ -64,6 +83,13 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to schedule an SMS.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @param sendAfter the time at which the message should be sent
+     * @return an IMessageWrapper object containing the details of the scheduled message
+     */
     @Override
     public IMessageWrapper scheduleSMS(String to, String body, ZonedDateTime sendAfter) {
         try {
@@ -79,6 +105,14 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to schedule an MMS.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @param mediaUrls a list of URLs of the media to be sent
+     * @param sendAfter the time at which the message should be sent
+     * @return an IMessageWrapper object containing the details of the scheduled message
+     */
     @Override
     public IMessageWrapper scheduleMMS(String to, String body, List<String> mediaUrls, ZonedDateTime sendAfter) {
         try {
@@ -99,11 +133,17 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to send an SMS from the twilio number.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendSMSFromNumber(String to, String body) {
         try {
             Message message = Message.creator(new PhoneNumber(to),
-                            new PhoneNumber(twilioConfig.getTrialNumber()), body)
+                            new PhoneNumber(twilioConfig.getTwilioNumber()), body)
                     .setStatusCallback(callbackProperties.getSmsStatusEndpoint())
                     .create();
             log.info("TWILIO API Sent SMS: {}", message.toString());
@@ -114,6 +154,13 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to send an MMS from the twilio number.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @param mediaUrls a list of URLs of the media to be sent
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendMMSFromNumber(String to, String body, List<String> mediaUrls) {
         try {
@@ -121,7 +168,7 @@ public class TwilioService implements IMessagingService {
             if (!mediaUrls.isEmpty()) {
                 media = mediaUrls.stream().map(URI::create).collect(Collectors.toList());
             }
-            Message message = Message.creator(new PhoneNumber(to), new PhoneNumber(twilioConfig.getTrialNumber()), body)
+            Message message = Message.creator(new PhoneNumber(to), new PhoneNumber(twilioConfig.getTwilioNumber()), body)
                     .setStatusCallback(callbackProperties.getSmsStatusEndpoint())
                     .setMediaUrl(media)
                     .create();
@@ -132,6 +179,12 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to send an SMS from the bulk service.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendSMSFromService(String to, String body) {
         try {
@@ -145,6 +198,13 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to send an MMS from the bulk service.
+     * @param to the recipient's phone number
+     * @param body the message body
+     * @param mediaUrls a list of URLs of the media to be sent
+     * @return an IMessageWrapper object containing the details of the sent message
+     */
     @Override
     public IMessageWrapper sendMMSFromService(String to, String body, List<String> mediaUrls) {
         try {
@@ -163,6 +223,11 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to fetch a message by its SID.
+     * @param sid the SID of the message
+     * @return an IMessageWrapper object containing the details of the fetched message
+     */
     @Override
     public IMessageWrapper fetchMessageById(String sid) {
         try {
@@ -174,6 +239,10 @@ public class TwilioService implements IMessagingService {
         }
     }
 
+    /**
+     * This method is used to determine whether the message status should be polled.
+     * @return a boolean indicating whether the message status should be polled
+     */
     @Override
     public boolean pollMessageStatus() {
         return !callbackProperties.getIsHealthy() && twilioConfig.isPollForStatus();

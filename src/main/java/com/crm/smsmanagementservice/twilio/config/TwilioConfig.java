@@ -27,8 +27,8 @@ public class TwilioConfig {
     private String accountSid;
     @Value("${twilio.authToken}")
     private String authToken;
-    @Value("${twilio.trialNumber}")
-    private String trialNumber;
+    @Value("${twilio.number}")
+    private String twilioNumber;
     @Value("${twilio.service.schedulingSMSSid}")
     private String schedulingServiceSid;
     @Value("${twilio.service.bulkSMSSid}")

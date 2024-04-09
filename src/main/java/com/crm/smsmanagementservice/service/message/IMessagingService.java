@@ -6,6 +6,8 @@ import java.util.List;
 
 
 /**
+ * This interface defines the structure of a messaging service.
+ *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/16/2024, Saturday
