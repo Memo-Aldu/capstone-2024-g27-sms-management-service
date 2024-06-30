@@ -83,8 +83,8 @@
         </dependency>
         <dependency>
             <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>3.2.4</version>
+            <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
+            <version>4.5.2</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -156,11 +156,30 @@
                     <excludes>
                         <exclude>**/SmsManagementServiceApplication*</exclude>
                         <exclude>**/entity/**</exclude>
+                        <exclude>**/dto/**</exclude>
 						<exclude>**/config/**</exclude>
                         <exclude>**/exception/Error.*</exclude>
                          <exclude>**/twilio/**</exclude>
                         <exclude>**/exception/ErrorResponse.*</exclude>
                     </excludes>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>3.0.0-M5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <includes>
+                        <include>**/*IT</include>
+                    </includes>
                 </configuration>
             </plugin>
 			<plugin>

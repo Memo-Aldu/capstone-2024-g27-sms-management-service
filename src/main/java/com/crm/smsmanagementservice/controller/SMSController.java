@@ -28,7 +28,7 @@ import java.net.URISyntaxException;
  * @created : 2/18/2024, Sunday
  */
 @RestController
-@RequestMapping("/api/v1/sms")
+@RequestMapping("/api/v1/messages/sms")
 @AllArgsConstructor
 @Slf4j
 public class SMSController {

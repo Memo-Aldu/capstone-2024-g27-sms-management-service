@@ -2,6 +2,8 @@ package com.crm.smsmanagementservice.dto.response.mms;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.Valid;
+import lombok.Builder;
+
 import java.util.List;
 
 /**
@@ -11,6 +13,7 @@ import java.util.List;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday
  */
+@Builder
 public record MMSBulkSendResponseDto(
         @Valid
         @JsonProperty("messages") List<MMSSendResponseDto> messages

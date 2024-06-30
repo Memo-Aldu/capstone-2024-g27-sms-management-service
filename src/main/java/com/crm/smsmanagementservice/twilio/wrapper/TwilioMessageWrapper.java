@@ -1,7 +1,7 @@
 package com.crm.smsmanagementservice.twilio.wrapper;
 
 import com.crm.smsmanagementservice.enums.MessageStatus;
-import com.crm.smsmanagementservice.service.message.IMessageWrapper;
+import com.crm.smsmanagementservice.service.provider.IMessageWrapper;
 import com.twilio.rest.api.v2010.account.Message;
 import lombok.RequiredArgsConstructor;
 

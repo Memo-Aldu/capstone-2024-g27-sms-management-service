@@ -20,7 +20,7 @@ import java.util.Map;
  * @created : 2/18/2024, Sunday
  */
 @Getter @Setter @Builder
-@Document(collection = "message_messages")
+@Document(collection = "messages")
 public class MessageDocument {
 
     @Id
@@ -39,4 +39,5 @@ public class MessageDocument {
     private Integer segmentCount;
     private Integer mediaCount;
     private Map<String, String> mediaUrls;
+    private String conversationId;
 }

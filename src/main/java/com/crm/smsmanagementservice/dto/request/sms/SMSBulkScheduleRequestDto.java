@@ -31,5 +31,5 @@ public record SMSBulkScheduleRequestDto(
 
         @NotNull(message = "Date time cannot be null")
         @Future(message = "Date time cannot be in the past")
-        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
+        @JsonProperty("scheduledTime") ZonedDateTime scheduledTime
 ) {}

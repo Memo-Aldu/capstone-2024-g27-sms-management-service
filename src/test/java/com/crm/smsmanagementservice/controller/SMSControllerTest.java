@@ -27,78 +27,81 @@ import static org.mockito.Mockito.*;
 
 public class SMSControllerTest {
 
-  @InjectMocks private SMSController smsController;
+    @InjectMocks private SMSController smsController;
 
-  @Mock private ISMSService smsService;
+    @Mock private ISMSService smsService;
 
-  @BeforeEach
-  public void setup() {
-    MockitoAnnotations.openMocks(this);
-  }
+    @BeforeEach
+    public void setup() {
+        MockitoAnnotations.openMocks(this);
+    }
 
-  @Test
-  public void shouldSendSMSSuccessfully() throws URISyntaxException {
-    SMSSendRequestDto request = new SMSSendRequestDto("1234567890", "1234567890", "Hello, World!");
-    SMSSendResponseDto response = new SMSSendResponseDto("MESSAGE_ID", MessageStatus.DELIVERED);
-    when(smsService.sendSMS(request)).thenReturn(response);
+    @Test
+    public void shouldSendSMSSuccessfully() throws URISyntaxException {
+        SMSSendRequestDto request = new SMSSendRequestDto("1234567890", "1234567890",
+                "Hello, World!", "conversationId");
+        SMSSendResponseDto response = new SMSSendResponseDto("MESSAGE_ID", MessageStatus.DELIVERED, "conversationId");
+        when(smsService.sendSMS(request)).thenReturn(response);
 
-    ResponseEntity<SMSSendResponseDto> result = smsController.sendSMS(request);
+        ResponseEntity<SMSSendResponseDto> result = smsController.sendSMS(request);
 
-    assertEquals(HttpStatus.CREATED, result.getStatusCode());
-    assertEquals(response, result.getBody());
-  }
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(response, result.getBody());
+    }
 
-  @Test
-  public void shouldScheduleSMSSuccessfully() throws URISyntaxException {
-    SMSScheduleRequestDto request =
-        new SMSScheduleRequestDto("1234567890", "1234567890", "Hello, World!", ZonedDateTime.now());
-    SMSScheduleResponseDto response =
-        new SMSScheduleResponseDto("MESSAGE_ID", MessageStatus.SCHEDULED, ZonedDateTime.now());
-    when(smsService.scheduleSMS(request)).thenReturn(response);
+    @Test
+    public void shouldScheduleSMSSuccessfully() throws URISyntaxException {
+        SMSScheduleRequestDto request =
+                new SMSScheduleRequestDto("1234567890", "1234567890",
+                        "Hello, World!", ZonedDateTime.now(), "conversationId");
+        SMSScheduleResponseDto response =
+                new SMSScheduleResponseDto("MESSAGE_ID", MessageStatus.SCHEDULED,
+                        ZonedDateTime.now(), "conversationId");
+        when(smsService.scheduleSMS(request)).thenReturn(response);
 
-    ResponseEntity<SMSScheduleResponseDto> result = smsController.scheduleSMS(request);
+        ResponseEntity<SMSScheduleResponseDto> result = smsController.scheduleSMS(request);
 
-    assertEquals(HttpStatus.CREATED, result.getStatusCode());
-    assertEquals(response, result.getBody());
-  }
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(response, result.getBody());
+    }
 
-  @Test
-  public void shouldSendBulkSMSSuccessfully() throws URISyntaxException {
-    SMSBulkSendRequestDto request =
-        new SMSBulkSendRequestDto(
-            "1234567890", "Hello, World!", List.of("1234567890", "1234567890"));
-    SMSBulkSendResponseDto response =
-        new SMSBulkSendResponseDto(
-            List.of(
-                new SMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED),
-                new SMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED)));
-    when(smsService.sendBulkSMS(request)).thenReturn(response);
+    @Test
+    public void shouldSendBulkSMSSuccessfully() throws URISyntaxException {
+        SMSBulkSendRequestDto request =
+                new SMSBulkSendRequestDto(
+                        "1234567890", "Hello, World!", List.of("1234567890", "1234567890"));
+        SMSBulkSendResponseDto response =
+                new SMSBulkSendResponseDto(
+                        List.of(
+                                new SMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED, "conversationId"),
+                                new SMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED, "conversationId")));
+        when(smsService.sendBulkSMS(request)).thenReturn(response);
 
-    ResponseEntity<SMSBulkSendResponseDto> result = smsController.sendBulkSMS(request);
+        ResponseEntity<SMSBulkSendResponseDto> result = smsController.sendBulkSMS(request);
 
-    assertEquals(HttpStatus.CREATED, result.getStatusCode());
-    assertEquals(response, result.getBody());
-  }
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(response, result.getBody());
+    }
 
-  @Test
-  public void shouldScheduleBulkSMSSuccessfully() throws URISyntaxException {
-    SMSBulkScheduleRequestDto request =
-        new SMSBulkScheduleRequestDto(
-            "1234567890",
-            "Hello, World!",
-            List.of("1234567890", "1234567890"),
-            ZonedDateTime.now());
-    SMSBulkScheduleResponseDto response =
-        new SMSBulkScheduleResponseDto(
-            List.of(
-                new SMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED),
-                new SMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED)),
-            ZonedDateTime.now());
-    when(smsService.scheduleBulkSMS(request)).thenReturn(response);
+    @Test
+    public void shouldScheduleBulkSMSSuccessfully() throws URISyntaxException {
+        SMSBulkScheduleRequestDto request =
+                new SMSBulkScheduleRequestDto(
+                        "1234567890",
+                        "Hello, World!",
+                        List.of("1234567890", "1234567890"),
+                        ZonedDateTime.now());
+        SMSBulkScheduleResponseDto response =
+                new SMSBulkScheduleResponseDto(
+                        List.of(
+                                new SMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED, "conversationId"),
+                                new SMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED, "conversationId")),
+                        ZonedDateTime.now());
+        when(smsService.scheduleBulkSMS(request)).thenReturn(response);
 
-    ResponseEntity<SMSBulkScheduleResponseDto> result = smsController.scheduleBulkSMS(request);
+        ResponseEntity<SMSBulkScheduleResponseDto> result = smsController.scheduleBulkSMS(request);
 
-    assertEquals(HttpStatus.CREATED, result.getStatusCode());
-    assertEquals(response, result.getBody());
-  }
+        assertEquals(HttpStatus.CREATED, result.getStatusCode());
+        assertEquals(response, result.getBody());
+    }
 }

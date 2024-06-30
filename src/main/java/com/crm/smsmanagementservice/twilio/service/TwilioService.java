@@ -3,8 +3,8 @@ package com.crm.smsmanagementservice.twilio.service;
 import com.crm.smsmanagementservice.config.CallbackProperties;
 import com.crm.smsmanagementservice.exception.DomainException;
 import com.crm.smsmanagementservice.exception.Error;
-import com.crm.smsmanagementservice.service.message.IMessageWrapper;
-import com.crm.smsmanagementservice.service.message.IMessagingService;
+import com.crm.smsmanagementservice.service.provider.IMessageWrapper;
+import com.crm.smsmanagementservice.service.provider.IMessagingProviderService;
 import com.crm.smsmanagementservice.twilio.config.TwilioConfig;
 import com.crm.smsmanagementservice.twilio.wrapper.TwilioMessageWrapper;
 import com.twilio.exception.ApiException;
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
  * @created : 3/16/2024, Saturday
  */
 @Service @Slf4j @RequiredArgsConstructor
-public class TwilioService implements IMessagingService {
+public class TwilioService implements IMessagingProviderService {
     private final TwilioConfig twilioConfig;
     private final CallbackProperties callbackProperties;
 

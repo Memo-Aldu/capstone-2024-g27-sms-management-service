@@ -1,13 +1,8 @@
 package com.crm.smsmanagementservice.controller;
 
-/**
- * @author : memo-aldu
- * @mailto : maldu064@uOttawa.ca
- * @created : 3/14/2024, Thursday
- */
+import com.crm.smsmanagementservice.service.message.IMessageStatusListenerService;
 import com.crm.smsmanagementservice.twilio.dto.TwilioStatusCallbackDto;
 import com.crm.smsmanagementservice.enums.MessageStatus;
-import com.crm.smsmanagementservice.service.sms.ISMSService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,14 +13,18 @@ import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-
+/**
+ * @author : memo-aldu
+ * @mailto : maldu064@uOttawa.ca
+ * @created : 3/14/2024, Thursday
+ */
 public class CallbackControllerTest {
 
     @InjectMocks
     private CallbackController callbackController;
 
     @Mock
-    private ISMSService smsService;
+    private IMessageStatusListenerService statusListenerService;
 
     @BeforeEach
     public void setup() {
@@ -48,7 +47,7 @@ public class CallbackControllerTest {
         MessageStatus.DELIVERED.toString(), "to", "from", "messageSid",
         "accountSid", "errorCode", "errorMessage");
 
-        verify(smsService, times(1)).updateSMSStatus(callbackDto);
+        verify(statusListenerService, times(1)).onMessageStatusChanged(callbackDto);
     }
 
     @Test

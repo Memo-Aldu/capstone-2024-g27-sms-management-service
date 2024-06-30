@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.service.message;
+package com.crm.smsmanagementservice.service.provider;
 
 import com.crm.smsmanagementservice.enums.MessageStatus;
 

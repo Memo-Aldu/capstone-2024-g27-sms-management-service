@@ -24,5 +24,6 @@ public record SMSSendRequestDto(
 
         @NotNull(message = "Message content cannot be null")
         @NotBlank(message = "Message content cannot be blank")
-        @JsonProperty("content") String messageContent
+        @JsonProperty("content") String messageContent,
+        @JsonProperty("conversationId") String conversationId
 ) {}

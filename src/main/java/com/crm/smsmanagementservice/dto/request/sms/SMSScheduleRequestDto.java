@@ -31,5 +31,7 @@ public record SMSScheduleRequestDto(
         @NotNull(message = "Date time cannot be null")
         @Future(message = "Date time cannot be in the past")
         //TODO: Validate date between interval?
-        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
+        @JsonProperty("scheduledTime") ZonedDateTime scheduledTime,
+        @JsonProperty("conversationId") String conversationId
+
 ) {}

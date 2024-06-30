@@ -1,11 +1,14 @@
 package com.crm.smsmanagementservice.mapper;
 
+import com.crm.smsmanagementservice.dto.response.message.MessageResponseDto;
 import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
-import com.crm.smsmanagementservice.service.message.IMessageWrapper;
+import com.crm.smsmanagementservice.service.provider.IMessageWrapper;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,12 +21,12 @@ import static org.mockito.Mockito.when;
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/18/2024, Monday
  */
-public class DocumentMapperTest {
-  private final DocumentMapper documentMapper = new DocumentMapperImpl();
+public class MessageMapperTest {
+  private final MessageMapper messageMapper = new MessageMapperImpl();
 
   @Test
   public void toDocument_NullMessage_ReturnsNull() {
-    assertNull(documentMapper.toDocument(null));
+    assertNull(messageMapper.toDocument(null));
   }
 
   @Test
@@ -47,7 +50,7 @@ public class DocumentMapperTest {
     when(message.getProviderId()).thenReturn("providerId");
 
     // When
-    MessageDocument document = documentMapper.toDocument(message);
+    MessageDocument document = messageMapper.toDocument(message);
 
     // Then
     assertNotNull(document);
@@ -68,4 +71,59 @@ public class DocumentMapperTest {
     assertEquals(MessageStatus.DELIVERED, document.getStatus());
     assertEquals("providerId", document.getProviderId());
   }
+
+    @Test
+    void toResponseDto_NullDocument_ReturnsNull() {
+        assertNull(messageMapper.toResponseDto(null));
+    }
+
+    @Test
+    void toResponseDto_ValidDocument_MapsCorrectly() {
+        // Given
+        MessageDocument document = MessageDocument.builder()
+            .id("MESSAGE_ID")
+            .createdTime(ZonedDateTime.now()).messageContent("Hello, how are you?")
+            .sender("SENDER").recipient("RECIPIENT").status(MessageStatus.SENT)
+            .conversationId("CONVERSATION_ID")
+            .build();
+
+        // When
+        MessageResponseDto responseDto = messageMapper.toResponseDto(document);
+
+        // Then
+        assertNotNull(responseDto);
+        assertEquals("MESSAGE_ID", responseDto.id());
+        assertEquals("Hello, how are you?", responseDto.messageContent());
+        assertEquals(MessageStatus.SENT, responseDto.status());
+        assertEquals("CONVERSATION_ID", responseDto.conversationId());
+    }
+
+    @Test
+    void toResponseDtoList_NullDocument_ReturnsNull() {
+        assertNull(messageMapper.toResponseDtoList(null));
+    }
+
+    @Test
+    void toResponseDtoList_ValidDocument_MapsCorrectly() {
+        // Given
+        MessageDocument document = MessageDocument.builder()
+            .id("MESSAGE_ID")
+            .createdTime(ZonedDateTime.now()).messageContent("Hello, how are you?")
+            .sender("SENDER").recipient("RECIPIENT").status(MessageStatus.SENT)
+            .conversationId("CONVERSATION_ID")
+            .build();
+        List<MessageDocument> documents = new ArrayList<>();
+        documents.add(document);
+
+        // When
+        List<MessageResponseDto> responseDtos = messageMapper.toResponseDtoList(documents);
+
+        // Then
+        assertNotNull(responseDtos);
+        assertEquals(1, responseDtos.size());
+        assertEquals("MESSAGE_ID", responseDtos.getFirst().id());
+        assertEquals("Hello, how are you?", responseDtos.getFirst().messageContent());
+        assertEquals(MessageStatus.SENT, responseDtos.getFirst().status());
+        assertEquals("CONVERSATION_ID", responseDtos.getFirst().conversationId());
+    }
 }
