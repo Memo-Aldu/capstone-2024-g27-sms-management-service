@@ -103,7 +103,6 @@ public class MessageServiceTest {
     public void testUpdateMessageStatus() {
         messageDocument.setStatus(MessageStatus.DELIVERED); // Update the status in the mock document
         when(messageRepository.findById(anyString())).thenReturn(Optional.of(messageDocument));
-        when(messageRepository.save(any(MessageDocument.class))).thenReturn(messageDocument);
         when(messageMapper.toResponseDto(any(MessageDocument.class)))
                 .thenAnswer(
                         invocation -> {
