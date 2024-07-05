@@ -38,9 +38,10 @@ public class MMSControllerTest {
 
   @Test
   public void shouldSendMMSSuccessfully() throws URISyntaxException {
-    MMSSendRequestDto request = new MMSSendRequestDto("1234567890",
-            "1234567890", "Hello, World!", List.of("http://example.com/image.jpg"));
-    MMSSendResponseDto response = new MMSSendResponseDto("MESSAGE_ID", MessageStatus.DELIVERED);
+    MMSSendRequestDto request = new MMSSendRequestDto(
+            "1234567890", "1234567890",
+            "Hello, World!", List.of("http://example.com/image.jpg"), "conversationId");
+    MMSSendResponseDto response = new MMSSendResponseDto("MESSAGE_ID", MessageStatus.DELIVERED, "conversationId");
     when(mmsService.sendMMS(request)).thenReturn(response);
 
     ResponseEntity<MMSSendResponseDto> result = mmsController.sendMMS(request);
@@ -54,9 +55,9 @@ public class MMSControllerTest {
     ZonedDateTime now = ZonedDateTime.now();
     MMSScheduleRequestDto request =
         new MMSScheduleRequestDto("1234567890", "1234567890",
-                "Hello, World!", now, List.of("http://example.com/image.jpg"));
+                "Hello, World!", now, List.of("http://example.com/image.jpg"), "conversationId");
     MMSScheduleResponseDto response =
-        new MMSScheduleResponseDto("MESSAGE_ID", MessageStatus.SCHEDULED, now);
+        new MMSScheduleResponseDto("MESSAGE_ID", MessageStatus.SCHEDULED, now, "conversationId");
     when(mmsService.scheduleMMS(request)).thenReturn(response);
 
     ResponseEntity<MMSScheduleResponseDto> result = mmsController.scheduleMMS(request);
@@ -74,8 +75,8 @@ public class MMSControllerTest {
     MMSBulkSendResponseDto response =
         new MMSBulkSendResponseDto(
             List.of(
-                new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED),
-                new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED)));
+                new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED, "conversationId"),
+                new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED, "conversationId")));
     when(mmsService.sendBulkMMS(request)).thenReturn(response);
 
     ResponseEntity<MMSBulkSendResponseDto> result = mmsController.sendBulkMMS(request);
@@ -96,8 +97,8 @@ public class MMSControllerTest {
     MMSBulkScheduleResponseDto response =
         new MMSBulkScheduleResponseDto(
             List.of(
-                new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED),
-                new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED)),
+                new MMSSendResponseDto("MESSAGE_ID1", MessageStatus.DELIVERED, "conversationId"),
+                new MMSSendResponseDto("MESSAGE_ID2", MessageStatus.DELIVERED, "conversationId")),
             now);
     when(mmsService.scheduleBulkMMS(request)).thenReturn(response);
 

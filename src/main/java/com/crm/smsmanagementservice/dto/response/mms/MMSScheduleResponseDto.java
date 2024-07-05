@@ -4,6 +4,8 @@ import com.crm.smsmanagementservice.enums.MessageStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
+
 import java.time.ZonedDateTime;
 
 /**
@@ -13,6 +15,7 @@ import java.time.ZonedDateTime;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday
  */
+@Builder
 public record MMSScheduleResponseDto(
         @NotNull(message = "Message ID is required")
         @NotBlank(message = "Message ID is required")
@@ -24,5 +27,6 @@ public record MMSScheduleResponseDto(
 
         @NotNull(message = "Date time cannot be null")
         @NotBlank(message = "Date time cannot be blank")
-        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
+        @JsonProperty("scheduledTime") ZonedDateTime scheduledTime,
+        @JsonProperty("conversationId") String conversationId
 ) {}

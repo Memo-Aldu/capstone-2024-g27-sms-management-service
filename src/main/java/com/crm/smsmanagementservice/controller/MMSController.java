@@ -31,7 +31,7 @@ import java.net.URISyntaxException;
  * @created : 3/26/2024, Tuesday
  */
 @RestController
-@RequestMapping("/api/v1/mms")
+@RequestMapping("/api/v1/messages/mms")
 @RequiredArgsConstructor
 @Slf4j(topic = "MMSController")
 public class MMSController {

@@ -4,6 +4,7 @@ import com.crm.smsmanagementservice.enums.MessageStatus;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 
 /**
  * This class represents a data transfer object for outgoing MMS send responses.
@@ -12,6 +13,7 @@ import jakarta.validation.constraints.NotNull;
  * @mailto : maldu064@uOttawa.ca
  * @created : 2/23/2024, Friday
  */
+@Builder
 public record MMSSendResponseDto(
         @NotNull(message = "Message ID is required")
         @NotBlank(message = "Message ID is required")
@@ -19,5 +21,6 @@ public record MMSSendResponseDto(
 
         @NotNull(message = "Status is required")
         @NotBlank(message = "Status is required")
-        @JsonProperty("status") MessageStatus status
+        @JsonProperty("status") MessageStatus status,
+        @JsonProperty("conversationId") String conversationId
 ) {}

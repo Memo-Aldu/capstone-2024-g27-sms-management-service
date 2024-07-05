@@ -1,4 +1,4 @@
-package com.crm.smsmanagementservice.service.message;
+package com.crm.smsmanagementservice.service.provider;
 
 
 import java.time.ZonedDateTime;
@@ -12,7 +12,7 @@ import java.util.List;
  * @mailto : maldu064@uOttawa.ca
  * @created : 3/16/2024, Saturday
  */
-public interface IMessagingService {
+public interface IMessagingProviderService {
      IMessageWrapper sendSMSFromNumber(String to, String from, String body);
      IMessageWrapper sendMMSFromNumber(String to, String from, String body, List<String> mediaUrls);
      IMessageWrapper scheduleSMS(String to, String body, ZonedDateTime sendAfter);

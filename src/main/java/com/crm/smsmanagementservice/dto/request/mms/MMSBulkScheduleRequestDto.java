@@ -2,7 +2,6 @@ package com.crm.smsmanagementservice.dto.request.mms;
 
 import com.crm.smsmanagementservice.util.validator.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -33,7 +32,7 @@ public record MMSBulkScheduleRequestDto(
 
         @NotNull(message = "Date time cannot be null")
         @Future(message = "Date time cannot be in the past")
-        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime,
+        @JsonProperty("scheduledTime") ZonedDateTime scheduledTime,
 
         @NotNull(message = "Media cannot be null")
         @NotEmpty(message = "Media cannot be empty")

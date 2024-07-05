@@ -2,6 +2,8 @@ package com.crm.smsmanagementservice.repository;
 
 import com.crm.smsmanagementservice.entity.MessageDocument;
 import com.crm.smsmanagementservice.enums.MessageStatus;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -25,4 +27,6 @@ public interface MessageRepository extends MongoRepository<MessageDocument, Stri
      */
     @Query("{ 'status' : { $in: ?0 } }")
     List<MessageDocument> findAllByStatus(List<MessageStatus> statuses);
+
+    Page<MessageDocument> findByConversationId(String conversationId, Pageable pageable);
 }

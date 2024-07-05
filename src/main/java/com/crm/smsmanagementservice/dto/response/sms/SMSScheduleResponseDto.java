@@ -25,5 +25,6 @@ public record SMSScheduleResponseDto(
 
         @NotNull(message = "Date time cannot be null")
         @NotBlank(message = "Date time cannot be blank")
-        @JsonProperty("scheduleTime") ZonedDateTime scheduleTime
+        @JsonProperty("scheduledTime") ZonedDateTime scheduledTime,
+        @JsonProperty("conversationId") String conversationId
 ) {}

@@ -19,5 +19,6 @@ public record SMSSendResponseDto(
 
         @NotNull(message = "Status is required")
         @NotBlank(message = "Status is required")
-        @JsonProperty("status") MessageStatus status
+        @JsonProperty("status") MessageStatus status,
+        @JsonProperty("conversationId") String conversationId
 ) {}

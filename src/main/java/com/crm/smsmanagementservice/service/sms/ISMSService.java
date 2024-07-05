@@ -1,6 +1,5 @@
 package com.crm.smsmanagementservice.service.sms;
 
-import com.crm.smsmanagementservice.dto.request.*;
 import com.crm.smsmanagementservice.dto.request.sms.SMSBulkScheduleRequestDto;
 import com.crm.smsmanagementservice.dto.request.sms.SMSBulkSendRequestDto;
 import com.crm.smsmanagementservice.dto.request.sms.SMSScheduleRequestDto;
@@ -21,6 +20,4 @@ public interface ISMSService {
     SMSScheduleResponseDto scheduleSMS(SMSScheduleRequestDto request);
     SMSBulkSendResponseDto sendBulkSMS(SMSBulkSendRequestDto request);
     SMSBulkScheduleResponseDto scheduleBulkSMS(SMSBulkScheduleRequestDto request);
-    void updateSMSStatus(IMessageStatusCallback smsStatus);
-    void pollSMSStatus();
 }

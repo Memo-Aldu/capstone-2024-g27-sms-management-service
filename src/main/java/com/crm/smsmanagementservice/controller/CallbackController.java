@@ -1,7 +1,7 @@
 package com.crm.smsmanagementservice.controller;
 
+import com.crm.smsmanagementservice.service.message.IMessageStatusListenerService;
 import com.crm.smsmanagementservice.twilio.dto.TwilioStatusCallbackDto;
-import com.crm.smsmanagementservice.service.sms.ISMSService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/v1/callback")
 @AllArgsConstructor
 public class CallbackController {
-    private final ISMSService smsService;
+    private final IMessageStatusListenerService messageStatusListenerService;
 
     /**
      * This method is a callback endpoint for receiving status updates for SMS messages from the Twilio API.
@@ -41,7 +41,9 @@ public class CallbackController {
                        @RequestParam(value = "ErrorMessage", required = false) String errorMessage) {
         log.info("SMS status callback received: {} " +
                 "with errorCode: {} and error: {}", messageStatus, errorCode, errorMessage);
-        smsService.updateSMSStatus(TwilioStatusCallbackDto.builder()
+        errorMessage = errorMessage == null ? "" : errorMessage;
+        errorCode = errorCode == null ? "" : errorCode;
+        messageStatusListenerService.onMessageStatusChanged(TwilioStatusCallbackDto.builder()
                 .accountSid(accountSid).messageSid(messageSid)
                 .smsSid(smsSid).smsStatus(smsStatus)
                 .errorCode(errorCode).errorMessage(errorMessage).build());
