@@ -26,3 +26,10 @@ TWILIO_NUMBER: ${TWILIO_NUMBER}
 POLL_FOR_STATUS: ${POLL_FOR_STATUS}
 SCHEDULING_SMS_SID: ${SCHEDULING_SMS_SID}
 BULK_SMS_SID: ${BULK_SMS_SID}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
