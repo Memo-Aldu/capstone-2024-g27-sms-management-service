@@ -52,8 +52,7 @@ public class MessageService implements MessageExternalAPI, MessageInternalAPI {
 
     @Override
     public Page<MessageDTO> getMessageByParticipantId(String userId, String contactId, Pageable pageable) {
-        log.info("Fetching messages with userId: {} and contactId: {}", userId, contactId);
-        Page<MessageDocument> messageDocuments = messageRepository.findByUserIdAndContactId(userId, contactId, pageable);
+        Page<MessageDocument> messageDocuments = messageRepository.findByUserIdAndContactIdAndStatus(userId, contactId, MessageStatus.DELIVERED ,pageable);
         log.info("Fetched messages {} with userId: {} and contactId: {}", messageDocuments.getContent().size(), userId, contactId);
         return messageDocuments.map(messageMapper::toDTO);
     }
@@ -190,7 +189,10 @@ public class MessageService implements MessageExternalAPI, MessageInternalAPI {
         if (message.getStatus().equals(MessageStatus.RECEIVING)) {
             messageDocument.setStatus(MessageStatus.RECEIVED);
         }
-        messageDocument.setCreatedDate(ZonedDateTime.now());
+        ZonedDateTime now = ZonedDateTime.now();
+        messageDocument.setCreatedDate(now);
+        messageDocument.setDeliveredTime(now);
+
         messageDocument.setType(isMedia ? MessageType.MMS : MessageType.SMS);
         messageRepository.save(messageDocument);
     }

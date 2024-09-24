@@ -18,6 +18,7 @@ import java.util.List;
 @Builder
 public record MessageDTO(
         String id,
+        String conversationId,
         String to,
         String from,
         Integer messageSegmentCount,

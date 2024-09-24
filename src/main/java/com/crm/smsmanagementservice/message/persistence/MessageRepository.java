@@ -2,6 +2,7 @@ package com.crm.smsmanagementservice.message.persistence;
 
 
 import com.crm.smsmanagementservice.core.enums.MessageDirection;
+import com.crm.smsmanagementservice.core.enums.MessageStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -18,7 +19,7 @@ import java.util.Optional;
  */
 @Repository
 public interface MessageRepository extends MongoRepository<MessageDocument, String> {
-    Page<MessageDocument> findByUserIdAndContactId(String userId, String contactId, Pageable pageable);
+    Page<MessageDocument> findByUserIdAndContactIdAndStatus(String userId, String contactId, MessageStatus status, Pageable pageable);
     Optional<MessageDocument> findByResourceId(String resourceId);
     Optional<MessageDocument> findFirstByToAndDirectionOrderByCreatedDateDesc(String to, MessageDirection direction);
 }
