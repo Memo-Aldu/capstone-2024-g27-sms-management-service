@@ -1,6 +1,5 @@
 package com.crm.smsmanagementservice.conversation.web;
 
-import com.crm.smsmanagementservice.core.validator.ValidPhoneNumber;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -20,14 +19,6 @@ public record ConversationCreateDTO(
         @NotNull(message = "contact Id cannot be null")
         @NotBlank(message = "contact Id cannot be blank")
         String contactId,
-
-        @JsonProperty("userNumber")
-        @ValidPhoneNumber(message = "user number is not valid")
-        String userNumber,
-
-        @JsonProperty("contactNumber")
-        @ValidPhoneNumber(message = "contact number is not valid")
-        String contactNumber,
 
         @JsonProperty("conversationName")
         String conversationName

@@ -6,6 +6,7 @@ import com.crm.smsmanagementservice.core.util.ZonedDateTimeReadConverter;
 import com.crm.smsmanagementservice.core.util.ZonedDateTimeWriteConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
 
 /**
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
  */
 
 @Configuration
+@Profile("!test")
 public class MongoConfig {
     @Bean
     public MongoCustomConversions customConversions() {

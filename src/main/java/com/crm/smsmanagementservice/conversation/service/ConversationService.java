@@ -11,6 +11,7 @@ import com.crm.smsmanagementservice.conversation.ConversationStatus;
 import com.crm.smsmanagementservice.conversation.persistence.*;
 import com.crm.smsmanagementservice.core.exception.DomainException;
 import com.crm.smsmanagementservice.core.exception.Error;
+import com.crm.smsmanagementservice.message.persistence.MessageDocument;
 import io.micrometer.common.lang.NonNullApi;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,12 +37,7 @@ public class ConversationService implements ConversationExternalAPI, Conversatio
             conversationDocument -> {
                 throw new DomainException(Error.ENTITY_ALREADY_EXISTS);
             });
-        ZonedDateTime createdTime = ZonedDateTime.now();
-        ConversationDocument conversationDocument = conversationMapper.toDocument(requestDto);
-        conversationDocument.setCreatedDate(createdTime);
-        conversationDocument.setCreatedDate(createdTime);
-        conversationDocument.setStatus(ConversationStatus.OPEN);
-        return conversationMapper.toDTO(conversationRepository.save(conversationDocument));
+        return conversationMapper.toDTO(saveConversation(requestDto));
     }
 
     @Override
@@ -87,7 +83,16 @@ public class ConversationService implements ConversationExternalAPI, Conversatio
     @Override
     public String findOrCreateConversation(String userId, String contactId) {
         return conversationRepository.findByUserIdAndContactId(userId, contactId).map(ConversationDocument::getId).orElseGet(
-            () -> createConversation(ConversationDTO.builder().userId(userId).contactId(contactId).build()).id()
+            () -> saveConversation(ConversationDTO.builder().userId(userId).contactId(contactId).build()).getId()
         );
+    }
+
+    private ConversationDocument saveConversation(ConversationDTO conversationDTO) {
+        ZonedDateTime createdTime = ZonedDateTime.now();
+        ConversationDocument conversationDocument = conversationMapper.toDocument(conversationDTO);
+        conversationDocument.setCreatedDate(createdTime);
+        conversationDocument.setCreatedDate(createdTime);
+        conversationDocument.setStatus(ConversationStatus.OPEN);
+        return conversationRepository.save(conversationDocument);
     }
 }
