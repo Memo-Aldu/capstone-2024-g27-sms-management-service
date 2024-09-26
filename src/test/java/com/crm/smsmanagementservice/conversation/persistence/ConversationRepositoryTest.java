@@ -67,7 +67,7 @@ public class ConversationRepositoryTest {
         Page<ConversationDocument> page = conversationRepository.findAllByUserId("user-1", pageable);
 
         assertEquals(1, page.getTotalElements());
-        assertEquals("user-1", page.getContent().get(0).getUserId());
+        assertEquals("user-1", page.getContent().getFirst().getUserId());
     }
 
     @Test
@@ -95,6 +95,6 @@ public class ConversationRepositoryTest {
 
         assertEquals(1, page.getTotalElements());
         assertEquals(1, page.getContent().size());
-        assertEquals("user-1", page.getContent().get(0).getUserId());
+        assertEquals("user-1", page.getContent().getFirst().getUserId());
     }
 }

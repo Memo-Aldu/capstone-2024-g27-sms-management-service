@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -26,6 +27,7 @@ import java.net.URISyntaxException;
 @Slf4j(topic = "TwilioConfig")
 @ConfigurationProperties(prefix = "twilio")
 @AllArgsConstructor @NoArgsConstructor
+@Profile("!test")
 public class TwilioConfig {
     @Value("${twilio.accountSid}")
     private String accountSid;

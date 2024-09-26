@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @TestConfiguration
 @Profile("test")
-@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.conversation.persistence")
+@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.*.persistence")
 public class EmbeddedMongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
