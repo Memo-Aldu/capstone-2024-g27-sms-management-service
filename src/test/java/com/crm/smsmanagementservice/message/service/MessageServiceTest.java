@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -108,9 +109,7 @@ class MessageServiceTest {
                 .userId("user1")
                 .build();
         List<MessageDTO> messageDTOList = List.of(messageDTO);
-        ProviderMessagingDTO.MessageItemDTO messageItemDTO = ProviderMessagingDTO.MessageItemDTO.builder().build();
-        Map<String, ProviderMessagingDTO.MessageItemDTO> messageItemDTOMap = new HashMap<>();
-        messageItemDTOMap.put("user1contact1", messageItemDTO);
+
         DomainMessage domainMessage = mock(DomainMessage.class);
         when(domainMessage.getId()).thenReturn("msg-1");
 
@@ -126,6 +125,38 @@ class MessageServiceTest {
         List<MessageDTO> result = messageService.createMessage(messageDTOList);
 
         verify(messagingProvider, times(1)).sendMessages(any(ProviderMessagingDTO.class));
+        verify(messageMapper, times(1)).toDocument(any(DomainMessage.class));
+        verify(messageRepository, times(1)).saveAll(anyList());
+        assertNotNull(result);
+    }
+
+    @Test
+    void testCreateScheduledMessage_Success() {
+        ZonedDateTime scheduledDate = ZonedDateTime.now().plusMinutes(5);
+        MessageDTO messageDTO = MessageDTO.builder()
+                .from("1234567890")
+                .to("0987654321")
+                .content("Hello")
+                .contactId("contact1")
+                .scheduledDate(scheduledDate)
+                .userId("user1")
+                .build();
+        List<MessageDTO> messageDTOList = List.of(messageDTO);
+        DomainMessage domainMessage = mock(DomainMessage.class);
+        when(domainMessage.getId()).thenReturn("msg-1");
+
+        Map<String, DomainMessage> response = Map.of("user1contact1", domainMessage);
+        MessageDocument messageDocument = MessageDocument.builder().build();
+        List<MessageDocument> messageDocumentList = List.of(messageDocument);
+
+        when(messagingProvider.scheduleMessages(any(ProviderMessagingDTO.class))).thenReturn(response);
+        when(messageMapper.toDocument(any(DomainMessage.class))).thenReturn(messageDocument);
+        when(messageRepository.saveAll(anyList())).thenReturn(messageDocumentList);
+        when(messageMapper.toDTO(any(MessageDocument.class))).thenReturn(messageDTO);
+
+        List<MessageDTO> result = messageService.createMessage(messageDTOList);
+
+        verify(messagingProvider, times(1)).scheduleMessages(any(ProviderMessagingDTO.class));
         verify(messageMapper, times(1)).toDocument(any(DomainMessage.class));
         verify(messageRepository, times(1)).saveAll(anyList());
         assertNotNull(result);
@@ -165,6 +196,47 @@ class MessageServiceTest {
     }
 
     @Test
+    void testCancelMessage_FailToCancelFromProvider() {
+        String messageId = "msg-1";
+        MessageDocument messageDocument = MessageDocument.builder()
+                .id(messageId)
+                .resourceId("res-1")
+                .status(MessageStatus.QUEUED)
+                .build();
+
+        when(messageRepository.findById(messageId)).thenReturn(Optional.of(messageDocument));
+        when(messagingProvider.cancelMessage(messageDocument.getResourceId())).thenReturn(false);
+
+        assertThrows(DomainException.class, () -> messageService.cancelMessage(messageId));
+        verify(messageRepository, times(1)).findById(messageId);
+    }
+
+    @Test
+    void testCancelMessage_NotFound() {
+        String messageId = "msg-1";
+
+        when(messageRepository.findById(messageId)).thenReturn(Optional.empty());
+
+        assertThrows(DomainException.class, () -> messageService.cancelMessage(messageId));
+        verify(messageRepository, times(1)).findById(messageId);
+    }
+
+    @Test
+    void testCancelMessageThatCantBeCanceled() {
+        String messageId = "msg-1";
+        MessageDocument messageDocument = MessageDocument.builder()
+                .id(messageId)
+                .resourceId("res-1")
+                .status(MessageStatus.DELIVERED)
+                .build();
+
+        when(messageRepository.findById(messageId)).thenReturn(Optional.of(messageDocument));
+
+        assertThrows(DomainException.class, () -> messageService.cancelMessage(messageId));
+        verify(messageRepository, times(1)).findById(messageId);
+    }
+
+    @Test
     void testUpdateMessageStatus_Success() {
         String messageId = "msg-1";
         MessageDocument messageDocument = MessageDocument.builder().build();
@@ -178,7 +250,30 @@ class MessageServiceTest {
     }
 
     @Test
-    void testUpdateMessage_DomainMessage() {
+    void testUpdateMessageStatus_EntityNotFound() {
+        String messageId = "msg-1";
+
+        when(messageRepository.findByResourceId(messageId)).thenReturn(Optional.empty());
+
+        assertThrows(DomainException.class, () -> messageService.updateMessageStatus(messageId, MessageStatus.DELIVERED, "Success", null));
+        verify(messageRepository, times(1)).findByResourceId(messageId);
+    }
+
+    @Test
+    void testUpdateMessageStatus_NoChange() {
+        String messageId = "msg-1";
+        MessageDocument messageDocument = MessageDocument.builder().build();
+        messageDocument.setStatus(MessageStatus.DELIVERED);
+
+        when(messageRepository.findByResourceId(messageId)).thenReturn(Optional.of(messageDocument));
+
+        messageService.updateMessageStatus(messageId, MessageStatus.DELIVERED, "Success", null);
+
+        verify(messageRepository, times(0)).save(any(MessageDocument.class));
+    }
+
+    @Test
+    void testUpdateMessageDomainMessage() {
         DomainMessage domainMessage = mock(DomainMessage.class);
         when(domainMessage.getId()).thenReturn("msg-1");
         when(domainMessage.getStatus()).thenReturn(MessageStatus.FAILED);
@@ -186,7 +281,36 @@ class MessageServiceTest {
         when(domainMessage.getErrorCode()).thenReturn(Optional.of("ERR123"));
         when(domainMessage.getRecipient()).thenReturn("recipient");
         when(domainMessage.getSender()).thenReturn(Optional.of("sender"));
+        when(domainMessage.getDeliveredTime()).thenReturn(ZonedDateTime.now());
         when(domainMessage.getPrice()).thenReturn(BigDecimal.valueOf(0.0));
+        when(domainMessage.getCurrency()).thenReturn(Currency.getInstance("USD"));
+        when(domainMessage.getMediaUrls()).thenReturn(Optional.of(Map.of("key", "value")));
+
+        when(domainMessage.getId()).thenReturn("msg-1");
+        MessageDocument messageDocument = MessageDocument.builder()
+                .id("msg-1")
+                .resourceId("msg-1")
+                .status(MessageStatus.SENDING)
+                .build();
+
+        when(messageRepository.findByResourceId(anyString())).thenReturn(Optional.of(messageDocument));
+
+        messageService.updateMessage(domainMessage);
+
+        verify(messageRepository, times(1)).save(any(MessageDocument.class));
+    }
+
+    @Test
+    void testUpdateMessageDomainMessageNotFound() {
+        when(messageRepository.findByResourceId(anyString())).thenReturn(Optional.empty());
+        assertThrows(DomainException.class, () -> messageService.updateMessage(mock(DomainMessage.class)));
+    }
+
+    @Test
+    void testUpdateMessageDomainMessageWithNoChange() {
+        DomainMessage domainMessage = mock(DomainMessage.class);
+        when(domainMessage.getId()).thenReturn("msg-1");
+        when(domainMessage.getRecipient()).thenReturn("recipient");
         when(domainMessage.getCurrency()).thenReturn(Currency.getInstance("USD"));
 
         when(domainMessage.getId()).thenReturn("msg-1");
@@ -194,6 +318,12 @@ class MessageServiceTest {
                 .id("msg-1")
                 .resourceId("msg-1")
                 .status(MessageStatus.SENDING)
+                .errorMessage("Error")
+                .errorCode("ERR123")
+                .price(BigDecimal.valueOf(0.0))
+                .media(Map.of("key", "value"))
+                .from("sender")
+                .to("recipient")
                 .build();
 
         when(messageRepository.findByResourceId(anyString())).thenReturn(Optional.of(messageDocument));

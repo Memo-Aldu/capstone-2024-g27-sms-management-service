@@ -107,4 +107,9 @@ class MessageMapperTest {
         assertEquals(mediaMap, messageMapper.mapOptionalMap(valuePresent));
         assertEquals(new HashMap<>(), messageMapper.mapOptionalMap(valueEmpty));
     }
+
+    @Test
+    void testNullMedia() {
+        assertEquals(new ArrayList<>(), messageMapper.mapMedia(null));
+    }
 }

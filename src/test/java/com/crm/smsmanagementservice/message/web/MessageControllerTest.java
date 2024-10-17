@@ -81,7 +81,36 @@ public class MessageControllerTest {
     }
 
     @Test
-    void testCreateMessage() throws Exception {
+    void testCreateSMSMessage() throws Exception {
+        List<MessageDTO> messages = Collections.singletonList(messageDTO);
+        Mockito.when(messageService.createMessage(any())).thenReturn(messages);
+
+        String requestBody = """
+                {
+                    "userId": "user1",
+                    "from": "+1234567890",
+                    "messageItems": [
+                        {
+                            "contactId": "contact1",
+                            "to": "+9876543210",
+                            "content": "Hello World"
+                        }
+                    ]
+                }
+                """;
+
+        mockMvc.perform(post("/api/v1/messages")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(requestBody))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.data[0].id").value("message-id-1"))
+                .andExpect(jsonPath("$.responseMessage").value("Messages created successfully"));
+
+        verify(messageService, times(1)).createMessage(any());
+    }
+
+    @Test
+    void testCreateMMSMessage() throws Exception {
         List<MessageDTO> messages = Collections.singletonList(messageDTO);
         Mockito.when(messageService.createMessage(any())).thenReturn(messages);
 
@@ -96,7 +125,9 @@ public class MessageControllerTest {
                             "content": "Hello World"
                         }
                     ],
-                    "media": []
+                    "media": [
+                        "http://example.com/image.jpg"
+                    ]
                 }
                 """;
 
