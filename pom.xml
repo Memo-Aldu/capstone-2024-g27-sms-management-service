@@ -111,6 +111,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-inline</artifactId>
+            <version>5.2.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>de.flapdoodle.embed</groupId>
             <artifactId>de.flapdoodle.embed.mongo.spring30x</artifactId>
             <version>4.5.2</version>
@@ -184,8 +190,7 @@
                                         <limit>
                                             <counter>COMPLEXITY</counter>
                                             <value>COVEREDRATIO</value>
-                                            <!--TODO: PUT IT BACK TO 0.80 -->
-                                            <minimum>0.0</minimum>
+                                            <minimum>0.80</minimum>
                                         </limit>
                                     </limits>
                                 </rule>
@@ -198,11 +203,8 @@
                         <exclude>**/SmsManagementServiceApplication*</exclude>
                         <exclude>**/*Document*</exclude>
                         <exclude>**/*DTO*</exclude>
-						<exclude>**/event/**</exclude>
-                        <exclude>**/exception/**</exclude>
-                        <exclude>**/enums/**</exclude>
-                        <exclude>**/dto/**</exclude>
-                        <exclude>**/config/**</exclude>
+                        <exclude>**/core/**</exclude>
+                        <exclude>**/TwilioConfig*</exclude>
                     </excludes>
                 </configuration>
             </plugin>

@@ -166,7 +166,20 @@ class ConversationServiceTest {
         verify(conversationRepository, times(1)).findAllByUserId(userId, pageable);
     }
 
- @Test
+    @Test
+    void testGetConversationsByUserId_Return_EmptyPage() {
+        String userId = "user1";
+        Pageable pageable = PageRequest.of(0, 10);
+
+        when(conversationRepository.findAllByUserId(userId, pageable)).thenReturn(Page.empty());
+
+        Page<ConversationDTO> result = conversationService.getConversationsByUserId(userId, pageable);
+
+        assertEquals(0, result.getTotalElements());
+        verify(conversationRepository, times(1)).findAllByUserId(userId, pageable);
+    }
+
+    @Test
     void testUpdateConversation_Success() {
         String conversationId = "conv1";
         ConversationDTO updateDto = ConversationDTO.builder()
@@ -206,6 +219,35 @@ class ConversationServiceTest {
         assertEquals(Error.ENTITY_NOT_FOUND.getCode(), exception.getCode());
         verify(conversationRepository, times(1)).findById(conversationId);
         verify(conversationRepository, never()).save(any(ConversationDocument.class));
+    }
+
+    @Test
+    void testUpdateConversationWithSameValues_ThenSuccess() {
+        String conversationId = "conv1";
+        ConversationDTO updateDto = ConversationDTO.builder()
+                .build();
+
+        ConversationDocument existingDocument = ConversationDocument.builder()
+                .id(conversationId)
+                .conversationName("Test Conversation")
+                .status(ConversationStatus.OPEN)
+                .build();
+
+        ConversationDTO existingDto = ConversationDTO.builder()
+                .conversationName("Test Conversation")
+                .status(ConversationStatus.OPEN)
+                .build();
+
+        when(conversationRepository.findById(conversationId)).thenReturn(Optional.of(existingDocument));
+
+        when(conversationRepository.save(any(ConversationDocument.class))).thenReturn(existingDocument);
+        when(conversationMapper.toDTO(existingDocument)).thenReturn(existingDto);
+
+        ConversationDTO result = conversationService.updateConversation(conversationId, updateDto);
+
+        assertEquals("Test Conversation", result.conversationName());
+        assertEquals(ConversationStatus.OPEN, result.status());
+        verify(conversationRepository, times(1)).save(any(ConversationDocument.class));
     }
 
     @Test

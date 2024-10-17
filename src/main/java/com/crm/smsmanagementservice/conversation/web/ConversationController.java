@@ -87,7 +87,7 @@ public class ConversationController {
     @PatchMapping("/{id}")
     public ResponseEntity<DomainAPIResponse<ConversationDTO>> updateConversation(
             @PathVariable String id, @Valid @RequestBody ConversationUpdateDTO requestDto) {
-        if (requestDto == null || (requestDto.conversationName() == null && requestDto.status() == null)) {
+        if (requestDto.conversationName() == null && requestDto.status() == null) {
             throw new DomainException(Error.INVALID_REQUEST);
         }
         ConversationDTO response = conversationService.updateConversation(id,

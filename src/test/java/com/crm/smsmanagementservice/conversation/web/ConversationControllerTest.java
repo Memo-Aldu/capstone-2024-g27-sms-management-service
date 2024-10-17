@@ -119,12 +119,11 @@ class ConversationControllerTest {
     }
 
     @Test
-    void testUpdateConversation_Success() throws Exception {
+    void testUpdateConversationStatus_Success() throws Exception {
         when(conversationService.updateConversation(any(), any())).thenReturn(conversationDTO);
 
         String json = """
         {
-            "conversationName": "Updated Conversation",
             "status": "CLOSED"
         }
         """;
@@ -133,7 +132,23 @@ class ConversationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(json))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.id").value("conv1"))
+                .andExpect(jsonPath("$.responseMessage").value("Conversation updated successfully"));
+    }
+
+    @Test
+    void testUpdateConversationName_Success() throws Exception {
+        when(conversationService.updateConversation(any(), any())).thenReturn(conversationDTO);
+
+        String json = """
+        {
+            "conversationName": "Updated Conversation"
+        }
+        """;
+
+        mockMvc.perform(patch("/api/v1/conversation/{id}", "conv1")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.responseMessage").value("Conversation updated successfully"));
     }
 

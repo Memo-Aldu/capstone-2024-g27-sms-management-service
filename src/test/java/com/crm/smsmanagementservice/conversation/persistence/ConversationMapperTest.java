@@ -5,6 +5,7 @@ import com.crm.smsmanagementservice.conversation.ConversationStatus;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import java.time.ZonedDateTime;
 /**
@@ -61,6 +62,16 @@ public class ConversationMapperTest {
         assertEquals(dto.contactId(), document.getContactId());
         assertEquals(dto.conversationName(), document.getConversationName());
         assertEquals(dto.status(), document.getStatus());
+    }
+
+    @Test
+    void testToDTOWithNullDocument() {
+        assertNull(conversationMapper.toDTO(null));
+    }
+
+    @Test
+    void testToDocumentWithNullDTO() {
+        assertNull(conversationMapper.toDocument(null));
     }
 }
 
