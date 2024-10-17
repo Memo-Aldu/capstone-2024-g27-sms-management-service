@@ -1,12 +1,3 @@
-spring:
-  data:
-    mongodb:
-      database: test
-      uri: mongodb://localhost/testdb
-      port: 0
-
-
-
 de:
   flapdoodle:
     mongodb:
