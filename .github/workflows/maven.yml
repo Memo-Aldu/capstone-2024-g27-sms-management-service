@@ -1,11 +1,3 @@
-# This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-maven
-
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
 name: sms-service project CI/CD flow
 
 on:
@@ -16,6 +8,16 @@ on:
 
 jobs:
   build:
+    services:
+      mongo:
+        image: mongo:4.0.2
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongo --eval 'db.runCommand({ ping: 1 })'" 
+          --health-interval 10s 
+          --health-timeout 5s 
+          --health-retries 5
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -25,6 +27,18 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Wait for MongoDB
+        run: |
+          for i in {1..10}; do
+            if mongo --eval "db.adminCommand('ping')" localhost:27017; then
+              echo "MongoDB is up!"
+              break
+            else
+              echo "Waiting for MongoDB..."
+              sleep 3
+            fi
+          done || exit 1  # Fail fast if MongoDB is not ready
+
       - name: Build with Maven
         run: mvn clean install -DskipTests
         env:

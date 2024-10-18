@@ -24,8 +24,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DataMongoTest
 @ActiveProfiles("test")
-@ExtendWith(SpringExtension.class) @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Import(EmbeddedMongoConfig.class) @RequiredArgsConstructor
+@ExtendWith(SpringExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Import(EmbeddedMongoConfig.class) // Ensure the EmbeddedMongoConfig is imported
 public class ConversationRepositoryTest {
 
     @Autowired
@@ -33,10 +34,8 @@ public class ConversationRepositoryTest {
 
     @BeforeEach
     public void setUp() {
-        // Clean up the repository before each test
         conversationRepository.deleteAll();
 
-        // Insert some test data
         ConversationDocument conversation1 = ConversationDocument.builder()
                 .id("conv-1")
                 .userId("user-1")
@@ -67,7 +66,7 @@ public class ConversationRepositoryTest {
         Page<ConversationDocument> page = conversationRepository.findAllByUserId("user-1", pageable);
 
         assertEquals(1, page.getTotalElements());
-        assertEquals("user-1", page.getContent().getFirst().getUserId());
+        assertEquals("user-1", page.getContent().get(0).getUserId());
     }
 
     @Test
@@ -82,19 +81,17 @@ public class ConversationRepositoryTest {
     @Test
     public void testFindByUserIdAndContactIdNotFound() {
         Optional<ConversationDocument> result = conversationRepository.findByUserIdAndContactId("user-1", "contact-99");
-
-        // No conversation should be found
         assertTrue(result.isEmpty());
     }
 
     @Test
     public void testPagination() {
-        Pageable pageable = PageRequest.of(0, 1); // Page size of 1
+        Pageable pageable = PageRequest.of(0, 1);
 
         Page<ConversationDocument> page = conversationRepository.findAllByUserId("user-1", pageable);
 
         assertEquals(1, page.getTotalElements());
         assertEquals(1, page.getContent().size());
-        assertEquals("user-1", page.getContent().getFirst().getUserId());
+        assertEquals("user-1", page.getContent().get(0).getUserId());
     }
 }
