@@ -36,7 +36,8 @@ services:
       MONGO_INITDB_USERNAME: ${MONGO_INITDB_USERNAME}
       MONGO_INITDB_PASSWORD: ${MONGO_INITDB_PASSWORD}
     ports:
-      - ${MONGO_HOST_PORT}:${MONGO_CONTAINER_PORT}
+      - ${MONGO_PORT}:${MONGO_PORT}
+    command: mongod --port ${MONGO_PORT}
     volumes:
       - ${MONGO_DATA_HOST_PATH}:/data/db
       - ${MONGO_LOG_HOST_PATH}:/var/log/mongodb

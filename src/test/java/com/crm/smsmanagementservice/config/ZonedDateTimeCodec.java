@@ -32,4 +32,3 @@ public class ZonedDateTimeCodec implements Codec<ZonedDateTime> {
         return ZonedDateTime.class;
     }
 }
-

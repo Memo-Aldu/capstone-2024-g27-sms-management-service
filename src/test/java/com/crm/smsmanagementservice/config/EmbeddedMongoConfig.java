@@ -1,7 +1,7 @@
 package com.crm.smsmanagementservice.config;
 
-import com.crm.smsmanagementservice.util.converter.ZonedDateTimeReadConverter;
-import com.crm.smsmanagementservice.util.converter.ZonedDateTimeWriteConverter;
+import com.crm.smsmanagementservice.core.util.ZonedDateTimeReadConverter;
+import com.crm.smsmanagementservice.core.util.ZonedDateTimeWriteConverter;
 import com.mongodb.MongoClientSettings;
 import org.bson.codecs.configuration.CodecRegistries;
 import org.bson.codecs.configuration.CodecRegistry;
@@ -17,7 +17,7 @@ import com.mongodb.client.MongoClients;
 import java.util.Arrays;
 
 @TestConfiguration
-@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.repository")
+@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.*.persistence")
 public class EmbeddedMongoConfig extends AbstractMongoClientConfiguration {
 
     @Override

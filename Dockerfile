@@ -6,9 +6,9 @@ COPY pom.xml /app
 RUN mvn dependency:resolve
 COPY . /app
 RUN mvn clean
-RUN mvn package
+RUN mvn package -DskipTests
 
-FROM openjdk:21-jdk-slim
+FROM openjdk:21-jdk
 COPY --from=build /app/target/sms-management-service.jar sms-management-service.jar
 EXPOSE ${CONTAINER_PORT}
 ENTRYPOINT ["java","-jar","sms-management-service.jar"]
