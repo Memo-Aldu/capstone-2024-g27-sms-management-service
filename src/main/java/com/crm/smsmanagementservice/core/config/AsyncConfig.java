@@ -7,7 +7,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 /**
- * This class is the configuration class for the async tasks.
+ * This class is the configuration class for the async tasks
  *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
