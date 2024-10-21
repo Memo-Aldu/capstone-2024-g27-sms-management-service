@@ -17,7 +17,7 @@ import com.mongodb.client.MongoClients;
 import java.util.Arrays;
 
 @TestConfiguration
-@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.repository")
+@EnableMongoRepositories(basePackages = "com.crm.smsmanagementservice.*.persistence")
 public class EmbeddedMongoConfig extends AbstractMongoClientConfiguration {
 
     @Override
