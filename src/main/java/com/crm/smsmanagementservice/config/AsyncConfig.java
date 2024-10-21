@@ -8,7 +8,7 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 /**
- * This class is the configuration class for the async tasks.
+ * This class is the configuration class for the async tasks
  *
  * @author : memo-aldu
  * @mailto : maldu064@uOttawa.ca
