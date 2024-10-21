@@ -2,7 +2,6 @@ package com.crm.smsmanagementservice.conversation.persistence;
 
 import com.crm.smsmanagementservice.config.EmbeddedMongoConfig;
 import com.crm.smsmanagementservice.conversation.ConversationStatus;
-import lombok.RequiredArgsConstructor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -27,7 +26,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(SpringExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(EmbeddedMongoConfig.class) // Ensure the EmbeddedMongoConfig is imported
-public class ConversationRepositoryTest {
+public class ConversationRepositoryIT {
 
     @Autowired
     private ConversationRepository conversationRepository;

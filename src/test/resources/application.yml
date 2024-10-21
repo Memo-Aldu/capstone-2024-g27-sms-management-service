@@ -1,6 +1,13 @@
+spring:
+  data:
+    mongodb:
+      database: test
+      uri: mongodb://localhost/test
+      port: 27017
+
+
 de:
   flapdoodle:
     mongodb:
       embedded:
         version: 4.0.2
-        database-dir: target/database

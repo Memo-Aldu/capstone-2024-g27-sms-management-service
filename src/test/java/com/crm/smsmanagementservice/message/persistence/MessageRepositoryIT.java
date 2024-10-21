@@ -1,6 +1,7 @@
 package com.crm.smsmanagementservice.message.persistence;
 
 import com.crm.smsmanagementservice.config.EmbeddedMongoConfig;
+import com.crm.smsmanagementservice.conversation.persistence.ConversationRepository;
 import com.crm.smsmanagementservice.core.enums.MessageDirection;
 import com.crm.smsmanagementservice.core.enums.MessageStatus;
 import lombok.RequiredArgsConstructor;
@@ -31,15 +32,18 @@ import static org.junit.jupiter.api.Assertions.*;
 @ActiveProfiles("test")
 @ExtendWith(SpringExtension.class) @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Import(EmbeddedMongoConfig.class) @RequiredArgsConstructor
-public class MessageRepositoryTest {
+public class MessageRepositoryIT {
     @Autowired
     private MessageRepository messageRepository;
 
     private MessageDocument testMessage;
+    @Autowired
+    private ConversationRepository conversationRepository;
 
     @BeforeEach
     void setUp() {
         // Initialize and save a test message document
+        conversationRepository.deleteAll();
         testMessage = MessageDocument.builder()
                 .id("msg-1")
                 .resourceId("res-1")
