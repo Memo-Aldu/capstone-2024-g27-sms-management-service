@@ -52,7 +52,7 @@ public class MessageService implements MessageExternalAPI, MessageInternalAPI {
 
     @Override
     public Page<MessageDTO> getMessageByParticipantId(String userId, String contactId, Pageable pageable) {
-        Page<MessageDocument> messageDocuments = messageRepository.findByUserIdAndContactIdAndStatus(userId, contactId, MessageStatus.DELIVERED ,pageable);
+        Page<MessageDocument> messageDocuments = messageRepository.findDeliveredMessagesByUserIdAndContactId(userId, contactId,pageable);
         log.info("Fetched messages {} with userId: {} and contactId: {}", messageDocuments.getContent().size(), userId, contactId);
         return messageDocuments.map(messageMapper::toDTO);
     }

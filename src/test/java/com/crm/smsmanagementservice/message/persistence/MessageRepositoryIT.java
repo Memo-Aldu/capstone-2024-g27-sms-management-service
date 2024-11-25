@@ -60,10 +60,10 @@ public class MessageRepositoryIT {
     }
 
     @Test
-    void testFindByUserIdAndContactIdAndStatus() {
+    void testFindDeliveredMessagesByUserIdAndContactId() {
         Pageable pageable = PageRequest.of(0, 10);
-        Page<MessageDocument> result = messageRepository.findByUserIdAndContactIdAndStatus(
-                "user-1", "contact-1", MessageStatus.RECEIVED, pageable);
+        Page<MessageDocument> result = messageRepository.findDeliveredMessagesByUserIdAndContactId(
+                "user-1", "contact-1", pageable);
 
         assertFalse(result.isEmpty());
         assertEquals(1, result.getTotalElements());

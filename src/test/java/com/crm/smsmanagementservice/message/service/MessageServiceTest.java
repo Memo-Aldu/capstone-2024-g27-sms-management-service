@@ -87,14 +87,14 @@ class MessageServiceTest {
         Page<MessageDocument> messagePage = new PageImpl<>(messageList, pageable, 1);
         MessageDTO messageDTO = MessageDTO.builder().build();
 
-        when(messageRepository.findByUserIdAndContactIdAndStatus(userId, contactId, MessageStatus.DELIVERED, pageable))
+        when(messageRepository.findDeliveredMessagesByUserIdAndContactId(userId, contactId, pageable))
                 .thenReturn(messagePage);
         when(messageMapper.toDTO(messageDocument)).thenReturn(messageDTO);
 
         Page<MessageDTO> result = messageService.getMessageByParticipantId(userId, contactId, pageable);
 
         verify(messageRepository, times(1))
-                .findByUserIdAndContactIdAndStatus(userId, contactId, MessageStatus.DELIVERED, pageable);
+                .findDeliveredMessagesByUserIdAndContactId(userId, contactId, pageable);
         verify(messageMapper, times(1)).toDTO(messageDocument);
         assertEquals(1, result.getTotalElements());
     }
