@@ -11,9 +11,6 @@ spring:
           enabled: false
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:dev}
-  data:
-    mongodb:
-      uri: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_HOSTNAME}:${MONGO_PORT}/${MONGO_INITDB_DATABASE}?authSource=admin&retryWrites=false
 
 twilio:
   accountSid: ${ACCOUNT_SID}

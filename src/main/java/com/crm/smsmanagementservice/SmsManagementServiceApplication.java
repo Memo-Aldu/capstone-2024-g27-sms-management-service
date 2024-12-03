@@ -7,6 +7,8 @@ import org.springframework.modulith.Modulithic;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import java.util.TimeZone;
+
 @EnableAsync
 @EnableScheduling
 @SpringBootApplication
@@ -17,6 +19,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class SmsManagementServiceApplication {
 
 	public static void main(String[] args) {
+		TimeZone.setDefault(TimeZone.getTimeZone("America/Toronto"));
 		SpringApplication.run(SmsManagementServiceApplication.class, args);
 	}
 }
