@@ -105,6 +105,13 @@ public class MessageService implements MessageExternalAPI, MessageInternalAPI {
     }
 
     @Override
+    public Page<MessageDTO> getMessagesByUserId(String userId, Pageable pageable) {
+        Page<MessageDocument> messageDocuments = messageRepository.findMessageDocumentByUserId(userId, pageable);
+        log.info("Fetched messages {} with userId: {}", messageDocuments.getContent().size(), userId);
+        return messageDocuments.map(messageMapper::toDTO);
+    }
+
+    @Override
     public MessageDTO cancelMessage(String messageId) {
         MessageDocument messageDocument = messageRepository.findById(messageId)
                 .orElseThrow(() -> new DomainException(Error.ENTITY_NOT_FOUND));

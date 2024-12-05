@@ -13,6 +13,7 @@ import java.util.List;
 public interface MessageExternalAPI {
     MessageDTO getMessageById(String messageId);
     Page<MessageDTO> getMessageByParticipantId(String userId, String contactId, Pageable pageable);
+    Page<MessageDTO> getMessagesByUserId(String userId, Pageable pageable);
     List<MessageDTO> createMessage(List<MessageDTO> messageCreateDTO);
     MessageDTO cancelMessage(String messageId);
 }

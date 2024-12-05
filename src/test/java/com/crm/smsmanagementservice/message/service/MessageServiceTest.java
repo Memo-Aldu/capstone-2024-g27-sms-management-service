@@ -68,6 +68,25 @@ class MessageServiceTest {
     }
 
     @Test
+    void testGetMessageByUserId_Success() {
+        String userId = "user1";
+        Pageable pageable = PageRequest.of(0, 10);
+        MessageDocument messageDocument = MessageDocument.builder().build();
+        List<MessageDocument> messageList = List.of(messageDocument);
+        Page<MessageDocument> messagePage = new PageImpl<>(messageList, pageable, 1);
+        MessageDTO messageDTO = MessageDTO.builder().build();
+
+        when(messageRepository.findMessageDocumentByUserId(userId, pageable)).thenReturn(messagePage);
+        when(messageMapper.toDTO(messageDocument)).thenReturn(messageDTO);
+
+        Page<MessageDTO> result = messageService.getMessagesByUserId(userId, pageable);
+
+        verify(messageRepository, times(1)).findMessageDocumentByUserId(userId, pageable);
+        verify(messageMapper, times(1)).toDTO(messageDocument);
+        assertEquals(1, result.getTotalElements());
+    }
+
+    @Test
     void testGetMessageById_NotFound() {
         String messageId = "msg-1";
 

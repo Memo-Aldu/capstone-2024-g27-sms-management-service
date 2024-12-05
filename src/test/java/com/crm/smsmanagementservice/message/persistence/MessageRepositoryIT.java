@@ -71,6 +71,16 @@ public class MessageRepositoryIT {
     }
 
     @Test
+    void testFindMessagesByUserId() {
+        Pageable pageable = PageRequest.of(0, 10);
+        Page<MessageDocument> result = messageRepository.findMessageDocumentByUserId("user-1", pageable);
+
+        assertFalse(result.isEmpty());
+        assertEquals(1, result.getTotalElements());
+        assertEquals(testMessage.getId(), result.getContent().getFirst().getId());
+    }
+
+    @Test
     void testFindByResourceId() {
         Optional<MessageDocument> result = messageRepository.findByResourceId("res-1");
 

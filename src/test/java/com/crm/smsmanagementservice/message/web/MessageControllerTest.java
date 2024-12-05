@@ -81,6 +81,21 @@ public class MessageControllerTest {
     }
 
     @Test
+    void testGetMessagesByUserId() throws Exception {
+        List<MessageDTO> messages = Collections.singletonList(messageDTO);
+        Mockito.when(messageService.getMessagesByUserId(eq("user1"), any())).thenReturn(new PageImpl<>(messages));
+
+        mockMvc.perform(get("/api/v1/messages/user/{userId}", "user1")
+                        .param("page", "0")
+                        .param("size", "10"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data[0].id").value("message-id-1"))
+                .andExpect(jsonPath("$.responseMessage").value("Messages fetched successfully"));
+
+        verify(messageService, times(1)).getMessagesByUserId(eq("user1"), any());
+    }
+
+    @Test
     void testCreateSMSMessage() throws Exception {
         List<MessageDTO> messages = Collections.singletonList(messageDTO);
         Mockito.when(messageService.createMessage(any())).thenReturn(messages);

@@ -39,6 +39,28 @@ public class MessageController {
         return ResponseEntity.ok(DomainAPIResponse);
     }
 
+    @GetMapping("/user/{id}")
+    public ResponseEntity<DomainAPIResponse<List<MessageDTO>>> getMessagesByUserId(
+            @PathVariable String id,
+            @RequestParam(defaultValue = "0", required = false) int page,
+            @RequestParam(defaultValue = "10", required = false) int size,
+            @RequestParam(defaultValue = "createdTime", required = false) String sortBy,
+            @RequestParam(defaultValue = "desc", required = false) String order) {
+        Pageable pageable = PageableHelper.createPage(page, size, sortBy, order);
+        Page<MessageDTO> response = messageService.getMessagesByUserId(id, pageable);
+        DomainAPIResponse<List<MessageDTO>> domainAPIResponse =
+                com.crm.smsmanagementservice.core.dto.DomainAPIResponse.<List<MessageDTO>>builder()
+                        .responseStatus(com.crm.smsmanagementservice.core.dto.DomainAPIResponse.DomainAPIResponseStatus.SUCCESS)
+                        .status(HttpStatus.OK)
+                        .data(response.getContent())
+                        .currentPage(response.getNumber())
+                        .totalPages(response.getTotalPages())
+                        .totalElements(response.getTotalElements())
+                        .message("Messages fetched successfully")
+                .build();
+        return ResponseEntity.ok(domainAPIResponse);
+    }
+
     @GetMapping
     public ResponseEntity<DomainAPIResponse<List<MessageDTO>>> getMessages(
             @RequestParam String userId,
